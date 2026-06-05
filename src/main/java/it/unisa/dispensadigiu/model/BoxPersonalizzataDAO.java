@@ -12,8 +12,8 @@ public class BoxPersonalizzataDAO {
 
     private BoxPersonalizzataBean mapRowToBox(ResultSet rs) throws SQLException {
         BoxPersonalizzataBean b = new BoxPersonalizzataBean();
-        b.setIdBox(rs.getInt("id_box"));
-        b.setIdUtente(rs.getInt("id_utente"));
+        b.setIdBox(rs.getInt("idbox"));
+        b.setIdUtente(rs.getInt("idutente"));
         b.setNome(rs.getString("nome_box"));
         return b;
     }
@@ -23,7 +23,7 @@ public class BoxPersonalizzataDAO {
      * L'ID generato servirà poi per inserire i prodotti usando ComposizioneOrdineDAO.
      */
     public int doSave(BoxPersonalizzataBean box) throws SQLException {
-        String query = "INSERT INTO Box_Personalizzata (id_utente, nome_box) VALUES (?, ?)";
+        String query = "INSERT INTO boxpersonalizzata (idutente, nome_box) VALUES (?, ?)";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -49,7 +49,7 @@ public class BoxPersonalizzataDAO {
      */
     public List<BoxPersonalizzataBean> doRetrieveByUtente(int idUtente) throws SQLException {
         List<BoxPersonalizzataBean> boxes = new ArrayList<>();
-        String query = "SELECT * FROM Box_Personalizzata WHERE id_utente = ?";
+        String query = "SELECT * FROM boxpersonalizzata WHERE idutente = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -69,7 +69,7 @@ public class BoxPersonalizzataDAO {
      * A cosa serve: Recupera i dettagli di una singola box tramite il suo ID.
      */
     public BoxPersonalizzataBean doRetrieveById(int idBox) throws SQLException {
-        String query = "SELECT * FROM Box_Personalizzata WHERE id_box = ?";
+        String query = "SELECT * FROM boxpersonalizzata WHERE idbox = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

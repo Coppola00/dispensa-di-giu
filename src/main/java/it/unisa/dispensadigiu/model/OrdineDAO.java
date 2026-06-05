@@ -12,7 +12,7 @@ public class OrdineDAO {
 
     // Salva l'ordine e restituisce l'ID generato automaticamente
     public int doSave(OrdineBean ordine) throws SQLException {
-        String query = "INSERT INTO Ordine (id_utente, data_ordine, totale_ordine, costo_spedizione, stato_ordine) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO ordine (idutente, data_ordine, totale_ordine, costo_spedizione, stato_ordine) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = ConnectionDatabase.getConnection();
              // Chiediamo a JDBC di restituirci le chiavi generate [cite: 170]
              PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -41,7 +41,7 @@ public class OrdineDAO {
      */
     public List<OrdineBean> doRetrieveAll() throws SQLException {
         List<OrdineBean> ordini = new ArrayList<>();
-        String query = "SELECT * FROM Ordine ORDER BY data_ordine DESC";
+        String query = "SELECT * FROM ordine ORDER BY data_ordine DESC";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query);
@@ -57,7 +57,7 @@ public class OrdineDAO {
     
     public List<OrdineBean> storicoOrdiniUtente(int idUtente) throws SQLException {
         List<OrdineBean> ordini = new ArrayList<>();
-        String query = "SELECT * FROM Ordine WHERE id_utente = ? ORDER BY data_ordine DESC";
+        String query = "SELECT * FROM ordine WHERE idutente = ? ORDER BY data_ordine DESC";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, idUtente);
@@ -73,7 +73,7 @@ public class OrdineDAO {
     // Filtro per data per l'amministratore [cite: 190]
     public List<OrdineBean> storicoOrdiniByDateRange(java.sql.Date dal, java.sql.Date al) throws SQLException {
         List<OrdineBean> ordini = new ArrayList<>();
-        String query = "SELECT * FROM Ordine WHERE DATE(data_ordine) BETWEEN ? AND ? ORDER BY data_ordine DESC";
+        String query = "SELECT * FROM ordine WHERE DATE(data_ordine) BETWEEN ? AND ? ORDER BY data_ordine DESC";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setDate(1, dal);
@@ -89,8 +89,8 @@ public class OrdineDAO {
 
     private OrdineBean mapRowToOrdine(ResultSet rs) throws SQLException {
         OrdineBean o = new OrdineBean();
-        o.setIdOrdine(rs.getInt("id_ordine"));
-        o.setIdUtente(rs.getInt("id_utente"));
+        o.setIdOrdine(rs.getInt("idordine"));
+        o.setIdUtente(rs.getInt("idutente"));
         o.setDataOrdine(rs.getTimestamp("data_ordine"));
         o.setTotaleOrdine(rs.getDouble("totale_ordine"));
         o.setCostoSpedizione(rs.getDouble("costo_spedizione"));

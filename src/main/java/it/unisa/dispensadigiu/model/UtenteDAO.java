@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class UtenteDAO {
 	
 	public void registrazione(UtenteBean utente) throws SQLException {
-        String query = "INSERT INTO Utente (nome, cognome, email, password, ruolo) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO utente (nome, cognome, email, password, ruolo) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             
@@ -16,7 +16,7 @@ public class UtenteDAO {
             ps.setString(2, utente.getCognome());
             ps.setString(3, utente.getEmail());
             // CIFRATURA DELLA PASSWORD 
-            ps.setString(4, PasswordUtils.hashPassword(utente.getPassword()));
+            ps.setString(4, utente.getPassword());
             ps.setString(5, utente.getRuolo() != null ? utente.getRuolo() : "USER");
             
             ps.executeUpdate();
@@ -24,7 +24,7 @@ public class UtenteDAO {
     }
 	
 	public UtenteBean controlloLogin(String email, String password) throws SQLException {
-        String query = "SELECT * FROM Utente WHERE email = ? AND password = ?";
+        String query = "SELECT * FROM utente WHERE email = ? AND password = ?";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             
@@ -35,7 +35,7 @@ public class UtenteDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     UtenteBean utente = new UtenteBean();
-                    utente.setIdutente(rs.getInt("id_utente"));
+                    utente.setIdutente(rs.getInt("idutente"));
                     utente.setNome(rs.getString("nome"));
                     utente.setCognome(rs.getString("cognome"));
                     utente.setEmail(rs.getString("email"));
@@ -48,7 +48,7 @@ public class UtenteDAO {
     }
 	
 	public boolean emailEsistente(String email) throws SQLException {
-        String query = "SELECT id_utente FROM Utente WHERE email = ?";
+        String query = "SELECT idutente FROM utente WHERE email = ?";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, email);
@@ -62,7 +62,7 @@ public class UtenteDAO {
      * Aggiorna le informazioni personali dell'utente (esclusa la password).
      */
     public void aggiornaProfilo(UtenteBean utente) throws SQLException {
-        String query = "UPDATE Utente SET nome = ?, cognome = ?, email = ? WHERE id_utente = ?";
+        String query = "UPDATE utente SET nome = ?, cognome = ?, email = ? WHERE idutente = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -80,7 +80,7 @@ public class UtenteDAO {
      * Aggiorna esclusivamente la password dell'utente, applicando la cifratura.
      */
     public void aggiornaPassword(int idUtente, String nuovaPassword) throws SQLException {
-        String query = "UPDATE Utente SET password = ? WHERE id_utente = ?";
+        String query = "UPDATE utente SET password = ? WHERE idutente = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

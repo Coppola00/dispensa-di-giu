@@ -14,9 +14,9 @@ public class RecensioneDAO {
      */
     private RecensioneBean mapRowToRecensione(ResultSet rs) throws SQLException {
         RecensioneBean r = new RecensioneBean();
-        r.setIdRecensione(rs.getInt("id_recensione"));
-        r.setIdUtente(rs.getInt("id_utente"));
-        r.setIdProdotto(rs.getInt("id_prodotto"));
+        r.setIdRecensione(rs.getInt("idrecensione"));
+        r.setIdUtente(rs.getInt("idutente"));
+        r.setIdProdotto(rs.getInt("idprodotto"));
         r.setValutazioneStelle(rs.getInt("valutazione_stelle"));
         r.setTesto(rs.getString("testo"));
         r.setDataPubblicazione(rs.getDate("data_pubblicazione"));
@@ -28,7 +28,7 @@ public class RecensioneDAO {
      * Utilizza CURRENT_DATE di SQL per registrare automaticamente il giorno dell'inserimento.
      */
     public void doSave(RecensioneBean recensione) throws SQLException {
-        String query = "INSERT INTO Recensione (id_utente, id_prodotto, valutazione_stelle, testo, data_pubblicazione) VALUES (?, ?, ?, ?, CURRENT_DATE)";
+        String query = "INSERT INTO recensione (idutente, idprodotto, valutazione_stelle, testo, data_pubblicazione) VALUES (?, ?, ?, ?, CURRENT_DATE)";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -48,7 +48,7 @@ public class RecensioneDAO {
      */
     public List<RecensioneBean> doRetrieveByProdotto(int idProdotto) throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
-        String query = "SELECT * FROM Recensione WHERE id_prodotto = ? ORDER BY data_pubblicazione DESC";
+        String query = "SELECT * FROM recensione WHERE idprodotto = ? ORDER BY data_pubblicazione DESC";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

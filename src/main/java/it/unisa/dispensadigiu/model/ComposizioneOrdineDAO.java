@@ -15,14 +15,14 @@ public class ComposizioneOrdineDAO {
      */
     private ComposizioneOrdineBean mapRowToComposizione(ResultSet rs) throws SQLException {
         ComposizioneOrdineBean c = new ComposizioneOrdineBean();
-        c.setIdOrdine(rs.getInt("id_ordine"));
-        c.setIdProdotto(rs.getInt("id_prodotto"));
+        c.setIdOrdine(rs.getInt("idordine"));
+        c.setIdProdotto(rs.getInt("idprodotto"));
         c.setQuantita(rs.getInt("quantita"));
-        c.setPrezzoUnitario(rs.getDouble("prezzo_acquisto"));
-        c.setIva(rs.getDouble("iva_acquisto"));
+        c.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
+        c.setIva(rs.getDouble("iva"));
         
         // Gestione della Box: usiamo getObject per permettere valori nulli dal DB
-        Object idBoxObj = rs.getObject("id_box_appartenenza");
+        Object idBoxObj = rs.getObject("idboxappartenenza");
         if (idBoxObj != null) {
             c.setIdBoxAppartenenza((Integer) idBoxObj);
         } else {
@@ -39,7 +39,7 @@ public class ComposizioneOrdineDAO {
      * Congela il prezzo d'acquisto e l'IVA garantendo l'integrità storica.
      */
     public void doSave(ComposizioneOrdineBean composizione) throws SQLException {
-        String query = "INSERT INTO ComposizioneOrdine (id_ordine, id_prodotto, quantita, prezzo_acquisto, iva_acquisto, id_box_appartenenza) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO composizioneOrdine (idordine, idprodotto, quantita, prezzo_unitario, iva, idboxappartenenza) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -69,7 +69,7 @@ public class ComposizioneOrdineDAO {
      */
     public List<ComposizioneOrdineBean> doRetrieveByOrdine(int idOrdine) throws SQLException {
         List<ComposizioneOrdineBean> righeOrdine = new ArrayList<>();
-        String query = "SELECT * FROM ComposizioneOrdine WHERE id_ordine = ?";
+        String query = "SELECT * FROM composizioneOrdine WHERE idordine = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -92,7 +92,7 @@ public class ComposizioneOrdineDAO {
      */
     public List<ComposizioneOrdineBean> doRetrieveProdottiBox(int idOrdine, int idBox) throws SQLException {
         List<ComposizioneOrdineBean> righeBox = new ArrayList<>();
-        String query = "SELECT * FROM ComposizioneOrdine WHERE id_ordine = ? AND id_box_appartenenza = ?";
+        String query = "SELECT * FROM composizioneOrdine WHERE idordine = ? AND idboxappartenenza = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

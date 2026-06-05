@@ -25,7 +25,7 @@ public class ProdottoDAO {
     }
 
     public void doUpdate(ProdottoBean prodotto) throws SQLException {
-        String query = "UPDATE Prodotto SET nome = ?, descrizione = ?, prezzo_base = ?, iva = ?, categoria = ?, immagine_url = ? WHERE id_prodotto = ?";
+        String query = "UPDATE prodotto SET nome = ?, descrizione = ?, prezzo_unitario = ?, iva = ?, categoria = ?, immagine_url = ? WHERE idprodotto = ?";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, prodotto.getNome());
@@ -40,7 +40,7 @@ public class ProdottoDAO {
     }
 
     public void doDelete(int idProdotto) throws SQLException {
-        String query = "DELETE FROM Prodotto WHERE id_prodotto = ?";
+        String query = "DELETE FROM prodotto WHERE idprodotto = ?";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, idProdotto);
@@ -49,7 +49,7 @@ public class ProdottoDAO {
     }
 
     public ProdottoBean trovaById(int idProdotto) throws SQLException {
-        String query = "SELECT * FROM Prodotto WHERE id_prodotto = ?";
+        String query = "SELECT * FROM prodotto WHERE idprodotto = ?";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, idProdotto);
@@ -64,7 +64,7 @@ public class ProdottoDAO {
 
     public List<ProdottoBean> trovaTutti() throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
-        String query = "SELECT * FROM Prodotto";
+        String query = "SELECT * FROM prodotto";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
@@ -77,10 +77,10 @@ public class ProdottoDAO {
 
     private ProdottoBean mapRowToProdotto(ResultSet rs) throws SQLException {
         ProdottoBean p = new ProdottoBean();
-        p.setIdProdotto(rs.getInt("id_prodotto"));
+        p.setIdProdotto(rs.getInt("idprodotto"));
         p.setNome(rs.getString("nome"));
         p.setDescrizione(rs.getString("descrizione"));
-        p.setPrezzoUnitario(rs.getDouble("prezzo_base"));
+        p.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
         p.setIva(rs.getDouble("iva"));
         p.setCategoria(rs.getString("categoria"));
         p.setImmagineUrl(rs.getString("immagine_url"));
@@ -92,7 +92,7 @@ public class ProdottoDAO {
      */
     public List<ProdottoBean> trovaByCategory(String categoria) throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
-        String query = "SELECT * FROM Prodotto WHERE categoria = ?";
+        String query = "SELECT * FROM prodotto WHERE categoria = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

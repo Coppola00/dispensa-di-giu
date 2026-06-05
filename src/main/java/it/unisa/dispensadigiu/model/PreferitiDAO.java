@@ -13,7 +13,7 @@ public class PreferitiDAO {
      * Aggiunge un prodotto alla lista dei desideri dell'utente.
      */
     public void aggiungiPreferito(int idUtente, int idProdotto) throws SQLException {
-        String query = "INSERT INTO Preferisce (id_utente, id_prodotto) VALUES (?, ?)";
+        String query = "INSERT INTO preferisce (idutente, idprodotto) VALUES (?, ?)";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -30,7 +30,7 @@ public class PreferitiDAO {
      * Rimuove un prodotto dalla lista dei desideri dell'utente.
      */
     public void rimuoviPreferito(int idUtente, int idProdotto) throws SQLException {
-        String query = "DELETE FROM Preferisce WHERE id_utente = ? AND id_prodotto = ?";
+        String query = "DELETE FROM preferisce WHERE idutente = ? AND idprodotto = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -46,7 +46,7 @@ public class PreferitiDAO {
      * Verifica se un prodotto è già presente nei preferiti (utile per mostrare il cuore "pieno" o "vuoto" nella UI).
      */
     public boolean isPreferito(int idUtente, int idProdotto) throws SQLException {
-        String query = "SELECT 1 FROM Preferisce WHERE id_utente = ? AND id_prodotto = ?";
+        String query = "SELECT 1 FROM preferisce WHERE idutente = ? AND idprodotto = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -68,9 +68,9 @@ public class PreferitiDAO {
         List<ProdottoBean> prodotti = new ArrayList<>();
         
         // La JOIN unisce la tabella dei preferiti con quella dei prodotti
-        String query = "SELECT p.* FROM Prodotto p " +
-                       "JOIN Preferisce pr ON p.id_prodotto = pr.id_prodotto " +
-                       "WHERE pr.id_utente = ?";
+        String query = "SELECT p.* FROM prodotto p " +
+                       "JOIN preferisce pr ON p.idprodotto = pr.idprodotto " +
+                       "WHERE pr.idutente = ?";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -81,10 +81,10 @@ public class PreferitiDAO {
                 while (rs.next()) {
                     // Mappiamo il ResultSet in un ProdottoBean (come fai in ProdottoDAO)
                     ProdottoBean p = new ProdottoBean();
-                    p.setIdProdotto(rs.getInt("id_prodotto"));
+                    p.setIdProdotto(rs.getInt("idprodotto"));
                     p.setNome(rs.getString("nome"));
                     p.setDescrizione(rs.getString("descrizione"));
-                    p.setPrezzoUnitario(rs.getDouble("prezzo_base"));
+                    p.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
                     p.setIva(rs.getDouble("iva"));
                     p.setCategoria(rs.getString("categoria"));
                     p.setImmagineUrl(rs.getString("immagine_url"));

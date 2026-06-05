@@ -33,7 +33,7 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
             
-            <a href="LoginServlet" class="icon-btn user-btn" aria-label="Area Utente">
+            <a href="login.jsp" class="icon-btn user-btn" aria-label="Area Utente">
                 <i class="fa-regular fa-user"></i>
             </a>
 
