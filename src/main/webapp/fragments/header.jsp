@@ -29,9 +29,17 @@
         </div>
 
         <div class="navbar-actions">
-            <button class="icon-btn search-btn" aria-label="Cerca nel sito">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
+            <div class="search-wrapper">
+        <button id="btn-toggle-ricerca" class="icon-btn search-btn" aria-label="Cerca nel sito">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+    <div id="contenitore-ricerca-nascosto" class="search-inline" style="display: none;">
+        <input type="text" id="barraRicerca" placeholder="Cerca i sapori di giù..." autocomplete="off">
+        
+        <div id="suggerimentiRicerca" class="suggerimenti-box"></div>
+    </div>
+    </div>
             
             <a href="login.jsp" class="icon-btn user-btn" aria-label="Area Utente">
                 <i class="fa-regular fa-user"></i>
@@ -43,9 +51,9 @@
             </a>
         </div>
     </nav>
+<script>
+    const contextPath = "${pageContext.request.contextPath}";
+</script>    
     
-    <div class="search-ajax-container" id="searchAjaxContainer" style="display: none;">
-        <input type="text" id="ajaxSearchInput" placeholder="Cerca i sapori del Sud..." autocomplete="off">
-        <ul id="ajaxSearchResults" class="search-results-list"></ul>
-    </div>
+<script src="${pageContext.request.contextPath}/js/ricercaAjax.js" defer></script>
 </header>

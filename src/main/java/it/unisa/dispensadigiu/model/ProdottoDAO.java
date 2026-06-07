@@ -115,7 +115,7 @@ public class ProdottoDAO {
     public List<ProdottoBean> doRetrieveByNomeAjax(String hint) throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
         // Il LIMIT 5 è una best practice per non intasare l'interfaccia a tendina dei suggerimenti
-        String query = "SELECT * FROM Prodotto WHERE nome LIKE ? LIMIT 5";
+        String query = "SELECT * FROM prodotto WHERE nome LIKE ? LIMIT 5";
         
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {

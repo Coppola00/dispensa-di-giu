@@ -8,7 +8,7 @@
             <a href="home.jsp" class="<%= currentURI.endsWith("home.jsp") || currentURI.endsWith("/") ? "active" : "" %>">Home</a>
         </li>
         <li>
-            <a href="CatalogoServlet" class="<%= currentURI.endsWith("CatalogoServlet") ? "active" : "" %>">Prodotti</a>
+            <a href="${pageContext.request.contextPath}/Catalogo">Prodotti</a>
         </li>
         <li>
             <a href="ComponiPaccoServlet" class="<%= currentURI.endsWith("ComponiPaccoServlet") ? "active" : "" %>">Pacco da Giù</a>

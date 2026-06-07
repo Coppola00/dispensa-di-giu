@@ -119,6 +119,76 @@ body {
     border: 2px solid var(--bianco-crema);
 }
 
+/* Il contenitore che avvolge lente e barra */
+.search-wrapper {
+    display: flex;
+    align-items: center; /* Centra verticalmente lente e barra */
+    gap: 10px; 
+}
+
+
+.icon-btn.search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Grandezza dell'icona */
+    color: #1D3557; 
+    padding: 5px;
+    transition: color 0.3s ease; 
+}
+
+
+.icon-btn.search-btn:hover {
+    color: #E63946; 
+}
+
+
+.search-inline {
+    position: relative; 
+}
+
+
+.search-inline input {
+    width: 250px;
+    padding: 8px 12px;
+    border: 1px solid #1D3557; 
+    border-radius: 20px; 
+    outline: none;
+    font-family: inherit; 
+}
+
+/* Stile della tendina dei suggerimenti AJAX */
+.suggerimenti-box {
+    display: none;
+    position: absolute;
+    top: 110%; /* Scende appena sotto l'input */
+    left: 0;
+    width: 100%;
+    background-color: #FDFBF7;
+    border: 1px solid #E63946;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    overflow: hidden; 
+}
+
+.suggerimento-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    color: #1D3557;
+}
+
+/* Rimuove il bordo inferiore dall'ultimo suggerimento */
+.suggerimento-item:last-child {
+    border-bottom: none;
+}
+
+.suggerimento-item:hover {
+    background-color: #FFF3E0; /* Sfondo Pesca Caldo al passaggio del mouse */
+}
+
+
 /* =========================================
    MENU HAMBURGER (Nascosto su Desktop)
    ========================================= */
@@ -175,7 +245,82 @@ body {
 .nav-menu a.active::after {
     width: 100%;
 }
+/* ============ 
+     CATALOGO
+   ============ */
+/* --- GRIGLIA PRINCIPALE --- */
+.griglia-prodotti {
+    display: grid;
+    /* La magia di Grid: crea colonne da minimo 250px. Se lo schermo si allarga, ne aggiunge altre in automatico */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px; /* Spazio tra una card e l'altra */
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
 
+/* --- SINGOLA CARD PRODOTTO --- */
+.card-prodotto {
+    background-color: #FDFBF7; /* Bianco Crema del tuo tema */
+    border: 1px solid #EBEBEB;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* Flexbox interno per allineare sempre il bottone in basso anche se i titoli hanno lunghezze diverse */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Effetto di sollevamento al passaggio del mouse (ottimo per l'interazione utente) */
+.card-prodotto:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    border-color: #1D3557; /* Richiamo al Blu profondo al passaggio del mouse */
+}
+
+/* --- IMMAGINE DEL PRODOTTO --- */
+.card-prodotto img {
+    width: 100%;
+    height: 220px; /* Altezza fissa per avere tutte le card uniformi */
+    object-fit: cover; /* Taglia l'immagine senza deformarla se le proporzioni non coincidono */
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* --- TESTI DELLA CARD --- */
+.card-prodotto h3 {
+    color: #1D3557; /* Blu profondo */
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.card-prodotto .prezzo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #E63946; /* Rosso Pomodoro per far risaltare il prezzo */
+    margin-bottom: 20px;
+}
+
+/* --- BOTTONE CARRELLO --- */
+.btn-rosso-pomodoro {
+    background-color: #E63946;
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px; /* Bottone arrotondato e moderno */
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Occupa tutta la larghezza della card */
+}
+
+.btn-rosso-pomodoro:hover {
+    background-color: #D62828; /* Una sfumatura più scura di rosso al click */
+}
 
 /* ============ 
     PRE-FOOTER 
@@ -676,7 +821,32 @@ body {
     .contact-container {
         flex-direction: column;
     }
+    
+    /* 1. Sistemiamo i Form */
+    .form-wrapper {
+        width: 90%; /* Su mobile il form si allarga quasi a tutto schermo */
+        padding: 20px; /* Riduciamo lo spazio interno per far respirare i campi */
+        margin: 30px auto;
+    }
+
+    /* 2. Sistemiamo il Catalogo */
+    /* La tua griglia (auto-fit) è già intelligente, ma riduciamo i gap per i telefoni */
+    .griglia-prodotti {
+        grid-template-columns: 1fr; /* Forza 1 singola colonna su telefoni piccoli */
+        gap: 15px; 
+    }
+    
+    /* 3. Aggiustamenti generali */
+    main.container {
+        padding: 0 15px; /* Diamo un po' di margine laterale a tutti i contenuti */
+    }
+
+    /* Sistemiamo eventuali titoli troppo grandi */
+    h1 {
+        font-size: 1.8rem;
+    }
 }  
+
 
 
 
