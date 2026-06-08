@@ -30,10 +30,13 @@
                         <div class="card-prodotto">
                             <img src="<%= p.getImmagineUrl() %>" alt="<%= p.getNome() %>">
                             <h3><%= p.getNome() %></h3>
-                            <p class="prezzo"><%= String.format("%.2f", p.getPrezzoUnitario()) %> &euro;</p>
-                            <form action="CarrelloServlet" method="POST">
-                                <input type="hidden" name="idProdotto" value="<%= p.getIdProdotto() %>">
-                                <button type="submit" class="btn-rosso-pomodoro">Aggiungi al carrello</button>
+                            <p class="prezzo"><%= String.format("%.2f", p.getPrezzoUnitario()) %> &euro; + IVA</p>
+                            <form action="${pageContext.request.contextPath}/CarrelloServlet" method="POST">
+    
+                                   <input type="hidden" name="action" value="add">
+    
+                                   <input type="hidden" name="idProdotto" value="<%= p.getIdProdotto() %>">
+                            <button type="submit" class="btn-rosso-pomodoro">Aggiungi al carrello</button>
                             </form>
                         </div>
             <%

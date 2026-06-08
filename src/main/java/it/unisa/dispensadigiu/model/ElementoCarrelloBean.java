@@ -32,23 +32,11 @@ public class ElementoCarrelloBean implements Serializable {
         this.quantita = quantita;
     }
     
- // Calcola il totale parziale per questa riga, includendo l'IVA
     public double getTotaleParziale() {
-    	
-        // 1. Calcolo il moltiplicatore dell'IVA 
-        double moltiplicatoreIva = 1 + prodotto.getIva();
-        
-        // 2. Calcolo il prezzo del singolo pezzo ivato
-        double prezzoIvato = prodotto.getPrezzoUnitario () * moltiplicatoreIva;
-        
-        // 3. Moltiplico per la quantità e arrotondo a due cifre decimali
-        double totale = prezzoIvato * quantita;
-        
-        // Usiamo Math.round per evitare problemi di precisione dei numeri decimali in Java (es. 10.999999999)
+        double totale = getPrezzoSingoloIvato() * quantita;
         return Math.round(totale * 100.0) / 100.0;
     }
     
- // Restituisce il prezzo del singolo prodotto con l'IVA (utile per la View)
     public double getPrezzoSingoloIvato() {
         double moltiplicatoreIva = 1 + (prodotto.getIva() / 100.0);
         double prezzoIvato = prodotto.getPrezzoUnitario() * moltiplicatoreIva;

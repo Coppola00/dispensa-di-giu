@@ -1,4 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="it.unisa.dispensadigiu.model.Carrello" %>
+
+<%-- 1. AGGIUNGI QUESTO BLOCCO JAVA QUI IN ALTO --%>
+<%
+    Carrello carrelloHeader = (Carrello) session.getAttribute("carrello");
+    int numeroArticoli = 0;
+    if (carrelloHeader != null) {
+        numeroArticoli = carrelloHeader.getNumeroArticoli();
+    }
+%>
+
 <header class="site-header">
     <div class="top-bar">
         <div class="top-bar-item">
@@ -45,15 +56,39 @@
                 <i class="fa-regular fa-user"></i>
             </a>
 
-            <a href="CarrelloServlet" class="cart-btn">
+            <%-- 2. MODIFICA IL LINK E IL BADGE QUI --%>
+            <a href="${pageContext.request.contextPath}/CarrelloServlet?action=view" class="cart-btn">
                 <i class="fa-solid fa-cart-shopping"></i> Carrello
-                <span class="cart-badge">0</span>
+                <span class="cart-badge"><%= numeroArticoli %></span>
             </a>
         </div>
     </nav>
 <script>
     const contextPath = "${pageContext.request.contextPath}";
-</script>    
+</script>   
     
 <script src="${pageContext.request.contextPath}/js/ricercaAjax.js" defer></script>
+<%-- Gestione del feedback visivo (Toast Notification) --%>
+<%
+    String toastMsg = (String) session.getAttribute("toastMsg");
+    if (toastMsg != null) {
+%>
+        <div id="toast-notification" class="toast-show">
+            <%= toastMsg %>
+        </div>
+        
+        <script>
+            // Nasconde il messaggio automaticamente dopo 3 secondi
+            setTimeout(function() {
+                var toast = document.getElementById("toast-notification");
+                if(toast) {
+                    toast.className = toast.className.replace("toast-show", "toast-hide");
+                }
+            }, 3000);
+        </script>
+<%
+        // Lo rimuoviamo dalla sessione così non ricompare ricaricando la pagina!
+        session.removeAttribute("toastMsg");
+    }
+%>
 </header>

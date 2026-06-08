@@ -65,4 +65,6 @@ public class Carrello implements Serializable {
         }
         return conteggio;
     }
+    
+  
 }
