@@ -11,7 +11,7 @@ import java.util.List;
 public class ProdottoDAO {
 
     public void doSave(ProdottoBean prodotto) throws SQLException {
-        String query = "INSERT INTO Prodotto (nome, descrizione, prezzo_base, iva, categoria, immagine_url) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO prodotto (nome, descrizione, prezzo_unitario, iva, categoria, immagine_url) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, prodotto.getNome());
@@ -108,10 +108,7 @@ public class ProdottoDAO {
         return prodotti;
     }
     
-    /**
-     * Cerca i prodotti il cui nome contiene i caratteri digitati (Case Insensitive in MySQL).
-     * Ottimizzato per i suggerimenti AJAX limitando i risultati.
-     */
+ 
     public List<ProdottoBean> doRetrieveByNomeAjax(String hint) throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
         // Il LIMIT 5 è una best practice per non intasare l'interfaccia a tendina dei suggerimenti

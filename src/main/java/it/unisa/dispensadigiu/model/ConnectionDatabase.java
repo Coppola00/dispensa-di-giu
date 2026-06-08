@@ -1,64 +1,42 @@
 package it.unisa.dispensadigiu.model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 public class ConnectionDatabase {
-	
-	private static List<Connection> freeDbConnections;
+    
+    private static DataSource ds;
 
     static {
-        freeDbConnections = new LinkedList<>();
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("DB driver not found: " + e.getMessage());
+            // Recupero del contesto iniziale di Tomcat
+            InitialContext ctx = new InitialContext();
+            // Ricerca della risorsa configurata nel context.xml tramite il percorso JNDI standard
+            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/dispensadigiu");
+        } catch (NamingException e) {
+            System.out.println("Errore durante l'inizializzazione del DataSource JNDI: " + e.getMessage());
         }
     }
 
-    private static synchronized Connection createDBConnection() throws SQLException {
-        Connection newConnection = null;
-        String url = "jdbc:mysql://localhost:3306/dispensadigiu";
-        String username = "root";
-        String password = "NuovaPassword123!";
-
-        newConnection = DriverManager.getConnection(url,
-                username, password);
-
-        // ✅ Autocommit attivo: ogni operazione viene salvata subito
-        newConnection.setAutoCommit(true);
-
-        return newConnection;
-    }
-
+    /**
+     * Restituisce una connessione prelevata direttamente dal Connection Pool di Tomcat.
+     */
     public static synchronized Connection getConnection() throws SQLException {
-        Connection connection;
-
-        if (!freeDbConnections.isEmpty()) {
-            connection = freeDbConnections.remove(0);
-
-            try {
-                if (connection.isClosed()) {
-                    connection = getConnection();
-                }
-            } catch (SQLException e) {
-                connection.close();
-                connection = getConnection();
-            }
-        } else {
-            connection = createDBConnection();
+        if (ds == null) {
+            throw new SQLException("DataSource non configurato o non raggiungibile.");
         }
-
-        return connection;
+        return ds.getConnection();
     }
 
+    /**
+     * Chiudendo la connessione del DataSource, questa viene restituita automaticamente al pool.
+     */
     public static synchronized void releaseConnection(Connection connection) throws SQLException {
         if (connection != null && !connection.isClosed()) {
-            freeDbConnections.add(connection);
+            connection.close();
         }
     }
-	  
 }

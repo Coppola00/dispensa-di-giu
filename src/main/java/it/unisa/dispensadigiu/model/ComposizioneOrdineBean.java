@@ -1,70 +1,66 @@
 package it.unisa.dispensadigiu.model;
 
+
 import java.io.Serializable;
 
-public class ComposizioneOrdineBean implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
-	private int idOrdine;
-	private int idProdotto;
-	private int idBoxAppartenenza;
-	private int quantita;
-	private Double prezzoUnitario;
-	private Double iva;
-	
-	public ComposizioneOrdineBean() {
-			}
+public class ComposizioneOrdineBean implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	public int getIdOrdine() {
-		return idOrdine;
-	}
+    private int idRigaOrdine;
+    private int idOrdine;
+    private Integer idProdotto; // Uso di Integer per consentire il valore null
+    private int quantita;
+    private double prezzoUnitario;
+    private double iva;
 
-	public void setIdOrdine(int idOrdine) {
-		this.idOrdine = idOrdine;
-	}
+    public ComposizioneOrdineBean() {
+    }
 
-	public int getIdProdotto() {
-		return idProdotto;
-	}
+    public int getIdRigaOrdine() {
+        return idRigaOrdine;
+    }
 
-	public void setIdProdotto(int idProdotto) {
-		this.idProdotto = idProdotto;
-	}
+    public void setIdRigaOrdine(int idRigaOrdine) {
+        this.idRigaOrdine = idRigaOrdine;
+    }
 
+    public int getIdOrdine() {
+        return idOrdine;
+    }
 
-	public int getQuantita() {
-		return quantita;
-	}
+    public void setIdOrdine(int idOrdine) {
+        this.idOrdine = idOrdine;
+    }
 
-	public void setQuantita(int quantita) {
-		this.quantita = quantita;
-	}
+    public Integer getIdProdotto() {
+        return idProdotto;
+    }
 
-	public Double getPrezzoUnitario() {
-		return prezzoUnitario;
-	}
+    public void setIdProdotto(Integer idProdotto) {
+        this.idProdotto = idProdotto;
+    }
 
-	public void setPrezzoUnitario(Double prezzoAcquisto) {
-		this.prezzoUnitario = prezzoAcquisto;
-	}
+    public int getQuantita() {
+        return quantita;
+    }
 
-	public Double getIva() {
-		return iva;
-	}
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
+    }
 
-	public void setIva(Double iva) {
-		this.iva = iva;
-	}
+    public double getPrezzoUnitario() {
+        return prezzoUnitario;
+    }
 
-	public int getIdBoxAppartenenza() {
-		return idBoxAppartenenza;
-	}
+    public void setPrezzoUnitario(double prezzoUnitario) {
+        this.prezzoUnitario = prezzoUnitario;
+    }
 
-	public void setIdBoxAppartenenza(int idBoxAppartenenza) {
-		this.idBoxAppartenenza = idBoxAppartenenza;
-	}
+    public double getIva() {
+        return iva;
+    }
 
-	
-
+    public void setIva(double iva) {
+        this.iva = iva;
+    }
 }

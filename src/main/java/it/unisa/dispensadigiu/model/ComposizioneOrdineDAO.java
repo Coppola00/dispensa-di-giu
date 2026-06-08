@@ -6,106 +6,73 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import javax.sql.DataSource;
 
 public class ComposizioneOrdineDAO {
 
-    /**
-     * Metodo di utilità interno per mappare il ResultSet nell'oggetto Bean.
-     */
-    private ComposizioneOrdineBean mapRowToComposizione(ResultSet rs) throws SQLException {
-        ComposizioneOrdineBean c = new ComposizioneOrdineBean();
-        c.setIdOrdine(rs.getInt("idordine"));
-        c.setIdProdotto(rs.getInt("idprodotto"));
-        c.setQuantita(rs.getInt("quantita"));
-        c.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
-        c.setIva(rs.getDouble("iva"));
-        
-        // Gestione della Box: usiamo getObject per permettere valori nulli dal DB
-        Object idBoxObj = rs.getObject("idboxappartenenza");
-        if (idBoxObj != null) {
-            c.setIdBoxAppartenenza((Integer) idBoxObj);
-        } else {
-            c.setIdBoxAppartenenza(-1); // Prodotto sfuso
-        }
-        
-        return c;
+    private DataSource ds;
+
+    public ComposizioneOrdineDAO(DataSource ds) {
+        this.ds = ds;
     }
 
-    /**
-     * 1. doSave
-     * A cosa serve: Salva la singola riga d'ordine al momento del checkout.
-     * Viene chiamato all'interno di un ciclo (FOR) per ogni elemento presente nel carrello.
-     * Congela il prezzo d'acquisto e l'IVA garantendo l'integrità storica.
-     */
+    // Salva una riga d'ordine nel database
     public void doSave(ComposizioneOrdineBean composizione) throws SQLException {
-        String query = "INSERT INTO composizioneOrdine (idordine, idprodotto, quantita, prezzo_unitario, iva, idboxappartenenza) VALUES (?, ?, ?, ?, ?, ?)";
-        
-        try (Connection con = ConnectionDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
+        String sql = "INSERT INTO composizioneOrdine (idordine, idprodotto, quantita, prezzo_unitario, iva) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection con = ds.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setInt(1, composizione.getIdOrdine());
-            ps.setInt(2, composizione.getIdProdotto());
+            
+            
+            if (composizione.getIdProdotto() != null) {
+                ps.setInt(2, composizione.getIdProdotto());
+            } else {
+                ps.setNull(2, java.sql.Types.INTEGER);
+            }
+            
             ps.setInt(3, composizione.getQuantita());
             ps.setDouble(4, composizione.getPrezzoUnitario());
             ps.setDouble(5, composizione.getIva());
-            
-            if (composizione.getIdBoxAppartenenza() != -1) {
-                ps.setInt(6, composizione.getIdBoxAppartenenza());
-            } else {
-                // Inseriamo -1 nel database se è un prodotto sfuso
-                ps.setInt(6, -1);
-            }
-            
+
             ps.executeUpdate();
         }
     }
 
-    /**
-     * 2. doRetrieveByOrdine
-     * A cosa serve: Recupera tutte le righe appartenenti a uno specifico ordine.
-     * È il metodo fondamentale che utilizzerai nella Servlet per generare il riepilogo
-     * ordine e compilare i dati della fattura da stampare via media query.
-     */
-    public List<ComposizioneOrdineBean> doRetrieveByOrdine(int idOrdine) throws SQLException {
-        List<ComposizioneOrdineBean> righeOrdine = new ArrayList<>();
-        String query = "SELECT * FROM composizioneOrdine WHERE idordine = ?";
-        
-        try (Connection con = ConnectionDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
+    // Recupera tutti gli elementi appartenenti a un determinato ordine
+    public Collection<ComposizioneOrdineBean> doRetrieveByOrdine(int idOrdine) throws SQLException {
+        String sql = "SELECT * FROM composizioneOrdine WHERE idordine = ?";
+        Collection<ComposizioneOrdineBean> righe = new ArrayList<>();
+
+        try (Connection con = ds.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setInt(1, idOrdine);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    righeOrdine.add(mapRowToComposizione(rs));
+                    ComposizioneOrdineBean riga = new ComposizioneOrdineBean();
+                    riga.setIdRigaOrdine(rs.getInt("id_riga_ordine"));
+                    riga.setIdOrdine(rs.getInt("idordine"));
+                    
+                    // Lettura corretta del valore NULL dal database
+                    int idProdotto = rs.getInt("idprodotto");
+                    if (rs.wasNull()) {
+                        riga.setIdProdotto(null);
+                    } else {
+                        riga.setIdProdotto(idProdotto);
+                    }
+                    
+                    riga.setQuantita(rs.getInt("quantita"));
+                    riga.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
+                    riga.setIva(rs.getDouble("iva"));
+                    
+                    righe.add(riga);
                 }
             }
         }
-        return righeOrdine;
-    }
-    
-    /**
-     * 3. doRetrieveProdottiBox
-     * A cosa serve: Metodo specifico per visualizzare i dettagli di un "Pacco da Giù".
-     * Estrae solo i prodotti di un ordine che appartengono a una determinata Box.
-     */
-    public List<ComposizioneOrdineBean> doRetrieveProdottiBox(int idOrdine, int idBox) throws SQLException {
-        List<ComposizioneOrdineBean> righeBox = new ArrayList<>();
-        String query = "SELECT * FROM composizioneOrdine WHERE idordine = ? AND idboxappartenenza = ?";
-        
-        try (Connection con = ConnectionDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            
-            ps.setInt(1, idOrdine);
-            ps.setInt(2, idBox);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    righeBox.add(mapRowToComposizione(rs));
-                }
-            }
-        }
-        return righeBox;
+        return righe;
     }
 }
