@@ -926,6 +926,98 @@ body {
     margin-top: 15px;
 }
 
+/* --- LAYOUT FATTURA A SCHERMO --- */
+.box-fattura {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 40px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
+    max-width: 800px;
+}
+
+.intestazione-fattura {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.dati-documento h1 { margin-top: 0; color: #1D3557; }
+.badge-stato { background: #2a9d8f; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
+
+.tabella-fattura {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabella-fattura th { border-bottom: 2px solid #1D3557; padding: 10px; text-align: left; }
+.tabella-fattura td { border-bottom: 1px solid #eee; padding: 10px; }
+.testo-centro { text-align: center; }
+.testo-destra { text-align: right; }
+
+.totali-fattura {
+    text-align: right;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+}
+
+.totale-netto { color: #E63946; font-size: 1.8rem; }
+.azioni-fattura { text-align: center; margin-bottom: 40px; }
+
+/* --- LAYOUT AREA UTENTE --- */
+.area-utente-layout {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    align-items: flex-start;
+}
+
+.box-profilo-utente {
+    flex: 1;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.box-storico-ordini {
+    flex: 3;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.dati-anagrafici p {
+    margin: 12px 0;
+    font-size: 1.05rem;
+}
+
+.storico-vuoto {
+    text-align: center;
+    padding: 40px 20px;
+}
+.storico-vuoto i { font-size: 3rem; color: #ccc; margin-bottom: 15px; display: block;}
+
+.btn-visualizza-ordine {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #1D3557;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.btn-visualizza-ordine:hover { background-color: #457B9D; }
+
 /* =========================================
    MEDIA QUERIES (Tablet e Smartphone)
    Breakpoint: 768px
@@ -948,39 +1040,32 @@ body {
     .logo-img {
         height: 50px; 
     }
-
-    .navbar-links {
-        display: none; 
-        width: 100%;
-        flex-direction: column;
-        gap: 15px;
-        padding-top: 15px;
-    }
     
     .hamburger-btn {
         display: block; 
         order: 1; 
     }
 
- 
     .navbar-actions {
         order: 2;
         width: 100%;
         justify-content: space-between;
         margin-top: 15px;
     }
-
-    .navbar-links.show {
-        display: flex; /* Sovrascrive il display: none; */
-        animation: scendiTendina 0.3s ease-in-out;
-        border-top: 1px solid rgba(0,0,0,0.1);
-        margin-top: 15px;
-    }
     
+    /* Gestione del menu di navigazione mobile via JavaScript */
     .header-menu {
-        display: none;
+        display: none; /* Nascosto di base */
         width: 100%;
         order: 3;
+        background-color: var(--bianco-crema);
+        margin-top: 15px;
+    }
+
+    /* CLASSE ATTIVATA DA JAVASCRIPT: Fa comparire la tendina */
+    .header-menu.show {
+        display: block !important;
+        animation: scendiTendina 0.3s ease-in-out;
     }
 
     .nav-menu ul {
@@ -988,11 +1073,6 @@ body {
         gap: 15px;
         padding: 15px 0;
         border-top: 1px solid rgba(0,0,0,0.1);
-    }
-
-    /* Questa classe verrà aggiunta tramite JavaScript per far apparire il menu */
-    .header-menu.show {
-        display: block;
     }
 
     /* HERO SECTION */
@@ -1016,7 +1096,7 @@ body {
         box-sizing: border-box;
     }
 
-    /*  PRE-FOOTER  */
+    /* PRE-FOOTER */
     .features-row {
         flex-direction: column;
     }
@@ -1024,9 +1104,8 @@ body {
     .feature-item {
         margin-bottom: 20px;
     }
-  
 
-    /*  FOOTER PRINCIPALE */
+    /* FOOTER PRINCIPALE */
     .footer-container {
         flex-direction: column; 
         gap: 40px;
@@ -1036,83 +1115,129 @@ body {
         margin-bottom: 10px;
     }
     
-    /* RESPONSIVE PAGINE STATICHE */
+    /* RESPONSIVE PAGINE STATICHE E FORM */
     .about-content,
     .contact-container {
         flex-direction: column;
     }
     
-    /* 1. Sistemiamo i Form */
     .form-wrapper {
-        width: 90%; /* Su mobile il form si allarga quasi a tutto schermo */
-        padding: 20px; /* Riduciamo lo spazio interno per far respirare i campi */
+        width: 90%;
+        padding: 20px;
         margin: 30px auto;
     }
 
-    /* 2. Sistemiamo il Catalogo */
-    /* La tua griglia (auto-fit) è già intelligente, ma riduciamo i gap per i telefoni */
     .griglia-prodotti {
-        grid-template-columns: 1fr; /* Forza 1 singola colonna su telefoni piccoli */
+        grid-template-columns: 1fr;
         gap: 15px; 
     }
     
-    /* 3. Aggiustamenti generali */
     main.container {
-        padding: 0 15px; /* Diamo un po' di margine laterale a tutti i contenuti */
+        padding: 0 15px;
     }
 
-    /* Sistemiamo eventuali titoli troppo grandi */
     h1 {
         font-size: 1.8rem;
     }
-    .tabella-carrello, .tabella-carrello tbody, .tabella-carrello tr, .tabella-carrello td {
+    
+    /* STRUTTURA AREA UTENTE RESPONSIVE */
+    .area-utente-layout {
+        flex-direction: column;
+    }
+    .box-profilo-utente, .box-storico-ordini { 
+        width: 100%; 
+    }
+
+    /* TRASFORMAZIONE TABELLA IN CARD PULITE (SENZA NOMI COLONNE) */
+    .tabella-carrello, 
+    .tabella-carrello tbody, 
+    .tabella-carrello tr, 
+    .tabella-carrello td {
         display: block;
         width: 100%;
     }
     
     .tabella-carrello thead {
-        display: none; /* Nascondiamo la testata su smartphone */
+        display: none !important; /* Nasconde l'intestazione fantasma */
     }
     
     .tabella-carrello tr {
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
         border-radius: 8px;
         background-color: #fff;
-        padding: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     }
     
     .tabella-carrello td {
-        text-align: right;
-        padding-left: 50%;
+        display: block !important;
+        text-align: center; /* Centra il dato puro verticalmente */
+        padding: 10px 0 !important;
+        border-bottom: 1px solid #f5f5f5;
         position: relative;
-        border-bottom: 1px solid #eee;
     }
     
     .tabella-carrello td:last-child {
         border-bottom: none;
+        padding-bottom: 0 !important;
     }
     
-    /* Iniettiamo le etichette per non perdere il contesto dei dati */
+    .tabella-carrello td:first-child {
+        padding-top: 0 !important;
+    }
+    
+    /* Rimuove e nasconde le vecchie scritte data-label generate a sinistra */
     .tabella-carrello td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 15px;
-        width: 45%;
-        text-align: left;
-        font-weight: bold;
-        color: #1D3557;
+        display: none !important;
+        content: none !important;
     }
     
-    .td-prodotto {
-        justify-content: flex-end;
+    .td-prodotto, .form-quantita {
+        justify-content: center;
     }
     
-    .form-quantita {
-        justify-content: flex-end;
+    .tabella-carrello td strong,
+    .tabella-carrello td span,
+    .tabella-carrello td a {
+        display: inline-block;
+        margin: 0 auto;
     }
-}  
+}
+
+/* Animazione di discesa per il menu mobile */
+@keyframes scendiTendina {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 
-
-
+/* =========================================
+   CSS MEDIA QUERY: OTTIMIZZAZIONE PER LA STAMPA
+   (Isolata esternamente per evitare conflitti)
+   ========================================= */
+@media print {
+    .no-print, header, footer, .hamburger-btn, .site-header, .azioni-fattura, .header-menu { 
+        display: none !important; 
+    }
+    
+    body, main.container {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .box-fattura {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

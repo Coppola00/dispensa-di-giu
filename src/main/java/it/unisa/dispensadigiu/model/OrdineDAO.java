@@ -10,32 +10,129 @@ import java.util.List;
 
 public class OrdineDAO {
 
-    // Salva l'ordine e restituisce l'ID generato automaticamente
-    public int doSave(OrdineBean ordine) throws SQLException {
-        String query = "INSERT INTO ordine (idutente, data_ordine, totale_ordine, costo_spedizione, stato_ordine) VALUES (?, ?, ?, ?, ?)";
+	// Salva l'ordine E i suoi dettagli usando le Transazioni
+    public int doSave(OrdineBean ordine, Carrello carrello) throws SQLException {
+        String queryOrdine = "INSERT INTO ordine (idutente, data_ordine, totale_ordine, costo_spedizione, stato_ordine) VALUES (?, ?, ?, ?, ?)";
+        // Aggiornata con i nomi della tua tabella composizioneOrdine
+        String queryDettaglio = "INSERT INTO composizioneOrdine (idordine, idprodotto, quantita, prezzo_unitario, iva) VALUES (?, ?, ?, ?, ?)";
+
+        Connection con = null;
+        
+        try {
+            con = ConnectionDatabase.getConnection();
+            con.setAutoCommit(false); // Inizia la Transazione
+
+            int idOrdineGenerato = -1;
+
+            try (PreparedStatement psOrdine = con.prepareStatement(queryOrdine, Statement.RETURN_GENERATED_KEYS)) {
+                psOrdine.setInt(1, ordine.getIdUtente());
+                psOrdine.setTimestamp(2, ordine.getDataOrdine());
+                psOrdine.setDouble(3, ordine.getTotaleOrdine());
+                psOrdine.setDouble(4, ordine.getCostoSpedizione());
+                psOrdine.setString(5, ordine.getStatoOrdine());
+                
+                psOrdine.executeUpdate();
+                
+                try (ResultSet rs = psOrdine.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        idOrdineGenerato = rs.getInt(1); 
+                    } else {
+                        throw new SQLException("Creazione ordine fallita, nessun ID generato.");
+                    }
+                }
+            }
+
+            try (PreparedStatement psDettaglio = con.prepareStatement(queryDettaglio)) {
+                for (ElementoCarrelloBean item : carrello.getElementi()) {
+                    psDettaglio.setInt(1, idOrdineGenerato);
+                    psDettaglio.setInt(2, item.getProdotto().getIdProdotto());
+                    psDettaglio.setInt(3, item.getQuantita());
+                    psDettaglio.setDouble(4, item.getProdotto().getPrezzoUnitario());
+                    psDettaglio.setDouble(5, item.getProdotto().getIva());
+                    
+                    psDettaglio.executeUpdate();
+                }
+            }
+
+            con.commit(); // Salva tutto definitivamente
+            return idOrdineGenerato;
+
+        } catch (SQLException e) {
+            if (con != null) {
+                con.rollback(); // Annulla tutto in caso di errore
+            }
+            throw e;
+        } finally {
+            if (con != null) {
+                con.setAutoCommit(true);
+                con.close();
+            }
+        }
+    }
+    
+    public OrdineBean doRetrieveById(int idOrdine) throws SQLException {
+        OrdineBean ordine = null;
+        String query = "SELECT * FROM ordine WHERE idordine = ?";
+
         try (Connection con = ConnectionDatabase.getConnection();
-             // Chiediamo a JDBC di restituirci le chiavi generate [cite: 170]
-             PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            
-            ps.setInt(1, ordine.getIdUtente());
-            ps.setTimestamp(2, ordine.getDataOrdine());
-            ps.setDouble(3, ordine.getTotaleOrdine());
-            ps.setDouble(4, ordine.getCostoSpedizione());
-            ps.setString(5, ordine.getStatoOrdine());
-            
-            ps.executeUpdate();
-            
-            try (ResultSet rs = ps.getGeneratedKeys()) {
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, idOrdine);
+
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1); // Restituisce l'id_ordine appena creato
+                    ordine = new OrdineBean();
+                    ordine.setIdOrdine(rs.getInt("idordine"));
+                    ordine.setIdUtente(rs.getInt("idutente"));
+                    ordine.setDataOrdine(rs.getTimestamp("data_ordine"));
+                    ordine.setTotaleOrdine(rs.getDouble("totale_ordine"));
+                    ordine.setCostoSpedizione(rs.getDouble("costo_spedizione"));
+                    ordine.setStatoOrdine(rs.getString("stato_ordine"));
                 }
             }
         }
-        return -1;
+        return ordine;
     }
 
     /**
-     * 1. doRetrieveAll
+     * Recupera la lista dei prodotti acquistati in un determinato ordine,
+     * utilizzando i prezzi e l'IVA "congelati" nella tabella composizioneOrdine.
+     */
+    public List<ElementoCarrelloBean> doRetrieveDettagliByOrdine(int idOrdine) throws SQLException {
+        List<ElementoCarrelloBean> dettagli = new ArrayList<>();
+        
+        // JOIN tra la tua tabella composizioneOrdine e prodotto
+        String query = "SELECT c.quantita, c.prezzo_unitario, c.iva, " +
+                       "p.idprodotto, p.nome, p.immagine_url " +
+                       "FROM composizioneOrdine c " +
+                       "JOIN prodotto p ON c.idprodotto = p.idprodotto " +
+                       "WHERE c.idordine = ?";
+
+        try (Connection con = ConnectionDatabase.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, idOrdine);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ProdottoBean p = new ProdottoBean();
+                    p.setIdProdotto(rs.getInt("idprodotto"));
+                    p.setNome(rs.getString("nome"));
+                    p.setImmagineUrl(rs.getString("immagine_url"));
+                    
+                    // Assegniamo i prezzi storici estratti da composizioneOrdine
+                    p.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
+                    p.setIva(rs.getDouble("iva"));
+
+                    ElementoCarrelloBean item = new ElementoCarrelloBean(p, rs.getInt("quantita"));
+                    dettagli.add(item);
+                }
+            }
+        }
+        return dettagli;
+    }
+    
+    /**
      * A cosa serve: Mostra all'Admin l'elenco complessivo di tutti gli ordini ricevuti.
      * Ordiniamo i risultati in modo decrescente (dal più recente al più vecchio).
      */

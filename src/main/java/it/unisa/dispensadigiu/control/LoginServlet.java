@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet {
                 if ("ADMIN".equals(utente.getRuolo())) {
                     response.sendRedirect("DashboardAdminServlet");
                 } else {
+                	session.setAttribute("toastMsg", "Bentornato, " + utente.getNome() + "! Accesso effettuato con successo.");
                     response.sendRedirect("home.jsp");
                 }
             } else {

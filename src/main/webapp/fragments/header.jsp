@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="it.unisa.dispensadigiu.model.Carrello" %>
 
-<%-- 1. AGGIUNGI QUESTO BLOCCO JAVA QUI IN ALTO --%>
 <%
     Carrello carrelloHeader = (Carrello) session.getAttribute("carrello");
     int numeroArticoli = 0;
@@ -36,59 +35,71 @@
         </button>
 
         <div class="header-menu">
-        <%@ include file="menu.jsp" %>
+            <%@ include file="menu.jsp" %>
         </div>
 
         <div class="navbar-actions">
             <div class="search-wrapper">
-        <button id="btn-toggle-ricerca" class="icon-btn search-btn" aria-label="Cerca nel sito">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
+                <button id="btn-toggle-ricerca" class="icon-btn search-btn" aria-label="Cerca nel sito">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
 
-    <div id="contenitore-ricerca-nascosto" class="search-inline" style="display: none;">
-        <input type="text" id="barraRicerca" placeholder="Cerca i sapori di giù..." autocomplete="off">
-        
-        <div id="suggerimentiRicerca" class="suggerimenti-box"></div>
-    </div>
-    </div>
+                <div id="contenitore-ricerca-nascosto" class="search-inline" style="display: none;">
+                    <input type="text" id="barraRicerca" placeholder="Cerca i sapori di giù..." autocomplete="off">
+                    <div id="suggerimentiRicerca" class="suggerimenti-box"></div>
+                </div>
+            </div>
             
-            <a href="login.jsp" class="icon-btn user-btn" aria-label="Area Utente">
+            <a href="${pageContext.request.contextPath}/AreaUtente" class="icon-btn user-btn" aria-label="Area Utente">
                 <i class="fa-regular fa-user"></i>
             </a>
 
-            <%-- 2. MODIFICA IL LINK E IL BADGE QUI --%>
             <a href="${pageContext.request.contextPath}/CarrelloServlet?action=view" class="cart-btn">
                 <i class="fa-solid fa-cart-shopping"></i> Carrello
                 <span class="cart-badge"><%= numeroArticoli %></span>
             </a>
         </div>
     </nav>
-<script>
-    const contextPath = "${pageContext.request.contextPath}";
-</script>   
-    
-<script src="${pageContext.request.contextPath}/js/ricercaAjax.js" defer></script>
-<%-- Gestione del feedback visivo (Toast Notification) --%>
-<%
-    String toastMsg = (String) session.getAttribute("toastMsg");
-    if (toastMsg != null) {
-%>
-        <div id="toast-notification" class="toast-show">
-            <%= toastMsg %>
-        </div>
-        
-        <script>
-            // Nasconde il messaggio automaticamente dopo 3 secondi
-            setTimeout(function() {
-                var toast = document.getElementById("toast-notification");
-                if(toast) {
-                    toast.className = toast.className.replace("toast-show", "toast-hide");
-                }
-            }, 3000);
-        </script>
-<%
-        // Lo rimuoviamo dalla sessione così non ricompare ricaricando la pagina!
-        session.removeAttribute("toastMsg");
-    }
-%>
+
+    <script>
+        const contextPath = "${pageContext.request.contextPath}";
+    </script>   
+    <script src="${pageContext.request.contextPath}/js/ricercaAjax.js" defer></script>
+
+    <%-- Gestione Toast Notification --%>
+    <%
+        String toastMsg = (String) session.getAttribute("toastMsg");
+        if (toastMsg != null) {
+    %>
+            <div id="toast-notification" class="toast-show">
+                <%= toastMsg %>
+            </div>
+            
+            <script>
+                setTimeout(function() {
+                    var toast = document.getElementById("toast-notification");
+                    if(toast) {
+                        toast.className = toast.className.replace("toast-show", "toast-hide");
+                    }
+                }, 3000);
+            </script>
+    <%
+            session.removeAttribute("toastMsg");
+        }
+    %>
+
+    <%-- JAVASCRIPT CORRETTO PER IL TOGGLE DEL MENU MOBILE --%>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const hamburger = document.querySelector(".hamburger-btn");
+            const headerMenu = document.querySelector(".header-menu");
+
+            if (hamburger && headerMenu) {
+                hamburger.addEventListener("click", function() {
+                    // Accende/spegne la classe .show coerente con le regole CSS sotto
+                    headerMenu.classList.toggle("show");
+                });
+            }
+        });
+    </script>
 </header>
