@@ -2,6 +2,7 @@
 <%@ page import="it.unisa.dispensadigiu.model.ProdottoBean" %>
 
 <%@ include file="fragments/header.jsp" %>
+<%@ include file="fragments/messaggi_feedback.jsp" %>
 
 <main class="container-semplice">
     <%

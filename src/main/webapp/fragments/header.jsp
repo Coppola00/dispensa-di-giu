@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="it.unisa.dispensadigiu.model.Carrello" %>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>La Dispensa di Giù</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+    </head>
 
 <header class="site-header">
     <div class="top-bar">
@@ -13,14 +19,10 @@
 
     <nav class="navbar">
         <div class="navbar-brand">
-            <a href="${pageContext.request.contextPath}/index.jsp">
+            <a href="${pageContext.request.contextPath}/home.jsp">
                 <img src="${pageContext.request.contextPath}/img/logo.png" alt="La Dispensa di Giù Logo" class="logo-img">
             </a>
         </div>
-        
-        <button class="hamburger-btn" aria-label="Apri menu principale">
-            <i class="fa-solid fa-bars"></i>
-        </button>
 
        <%@ include file="menu.jsp" %>
 
@@ -78,22 +80,6 @@
    </header>
 
 <script>
-    // Variabile globale utile per gli script esterni
-    const contextPath = "${pageContext.request.contextPath}";
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // 1. Logica Hamburger Menu
-        const hamburger = document.querySelector(".hamburger-btn");
-        const headerMenu = document.querySelector(".header-menu");
-        if (hamburger && headerMenu) {
-            hamburger.addEventListener("click", () => headerMenu.classList.toggle("show"));
-        }
-
-        // 2. Logica scomparsa Toast Notification
-        const toast = document.getElementById("toast-notification");
-        if (toast) {
-            setTimeout(() => toast.classList.replace("toast-show", "toast-hide"), 3000);
-        }
-    });
+    const contextPath = "<%= request.getContextPath() %>";
 </script>
 <script src="${pageContext.request.contextPath}/js/ricercaAjax.js" defer></script>

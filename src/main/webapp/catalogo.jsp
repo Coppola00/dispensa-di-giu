@@ -3,10 +3,10 @@
 <%@ page import="it.unisa.dispensadigiu.model.ProdottoBean" %>
 
 <%@ include file="fragments/header.jsp" %>
+<%@ include file="fragments/messaggi_feedback.jsp" %>
 
 <main class="container-catalogo">
     <h1 class="titolo-pagina">I Nostri Prodotti</h1>
-    
     <div class="filtri-categoria">
         <a href="${pageContext.request.contextPath}/Catalogo" class="btn-filtro">Tutti i prodotti</a>
         <a href="${pageContext.request.contextPath}/Catalogo?categoria=Salumi" class="btn-filtro">Salumi</a>

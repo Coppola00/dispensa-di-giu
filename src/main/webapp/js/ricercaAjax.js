@@ -1,32 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     
-    // --- ELEMENTI DEL DOM ---
-    const btnToggleRicerca = document.getElementById("btn-toggle-ricerca");
-    const contenitoreRicerca = document.getElementById("contenitore-ricerca-nascosto");
+    // --- ELEMENTI DEL DOM (Allineati al tuo header.jsp) ---
     const searchInput = document.getElementById("barraRicerca");
     const resultsBox = document.getElementById("suggerimentiRicerca");
 
-    // --- 1. LOGICA TOGGLE (Mostra/Nascondi la barra) ---
-    btnToggleRicerca.addEventListener("click", function(event) {
-        event.stopPropagation(); // Evita che il click si propaghi e chiuda subito la barra
-        
-        // Se è nascosto, mostralo. Se è visibile, nascondilo.
-        if (contenitoreRicerca.style.display === "none") {
-            contenitoreRicerca.style.display = "block";
-            searchInput.focus(); // Metti subito il cursore dentro per scrivere
-        } else {
-            contenitoreRicerca.style.display = "none";
-            resultsBox.style.display = "none"; // Chiudi anche gli eventuali suggerimenti
-            searchInput.value = ""; // Pulisci il campo
-        }
-    });
-
-    // --- 2. LOGICA AJAX (Quella che avevamo già fatto) ---
+    // --- LOGICA AJAX (Ascolto della digitazione) ---
     searchInput.addEventListener("keyup", function() {
         const query = searchInput.value.trim();
 
+        // Si attiva solo se l'utente scrive almeno 2 caratteri
         if (query.length >= 2) {
-            // Chiamata alla Servlet RicercaAjaxServlet
+            
+            // Chiamata alla Servlet usando la variabile globale contextPath definita nell'header
             fetch(contextPath + "/RicercaAjax?q=" + encodeURIComponent(query))
                 .then(response => {
                     if (!response.ok) throw new Error("Errore di rete");
@@ -34,17 +19,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .then(data => {
                     resultsBox.innerHTML = ""; 
+                    
                     if (data.length > 0) {
                         data.forEach(prodotto => {
                             const div = document.createElement("div");
                             div.className = "suggerimento-item";
                             div.textContent = prodotto.nome;
-                            div.onclick = () => window.location.href = "DettaglioProdotto?id=" + prodotto.id;
+                            
+                            // Sicurezza sul link: aggiungiamo il contextPath per evitare rotte errate
+                            div.onclick = () => {                            
+							window.location.href = contextPath + "/Catalogo?action=dettaglio&idProdotto=" + prodotto.id;
+                            };
+                            
                             resultsBox.appendChild(div);
                         });
-                        resultsBox.style.display = "block";
+                        resultsBox.style.display = "block"; // Mostra la tendina
                     } else {
-                        resultsBox.style.display = "none";
+                        resultsBox.style.display = "none"; // Nascondi se vuoto
                     }
                 })
                 .catch(error => console.error("Errore AJAX:", error));
@@ -54,12 +45,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // --- 3. CHIUSURA AUTOMATICA ---
-    // Nascondi tutto se l'utente clicca da qualsiasi altra parte nella pagina
+    // --- CHIUSURA AUTOMATICA ---
+    // Nascondi la tendina dei suggerimenti se l'utente clicca altrove nella pagina
     document.addEventListener("click", function(event) {
-        // Se il click NON è dentro il contenitore di ricerca e NON è sul bottone
-        if (!contenitoreRicerca.contains(event.target) && event.target !== btnToggleRicerca) {
-            contenitoreRicerca.style.display = "none";
+        if (event.target !== searchInput && event.target !== resultsBox) {
             resultsBox.style.display = "none";
         }
     });
