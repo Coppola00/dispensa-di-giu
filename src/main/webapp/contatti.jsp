@@ -1,87 +1,54 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contatti | La Dispensa di Giù</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-</head>
-<body>
 
-    <%@ include file="fragments/header.jsp" %>
+<%@ include file="fragments/header.jsp" %>
 
-    <main class="static-page">
-        <section class="page-header">
-            <h1>Contattaci</h1>
-            <p>Siamo qui per aiutarti. Scrivici per informazioni sui prodotti o sul tuo ordine.</p>
-        </section>
+<main class="container-semplice">
+    <h1 class="titolo-pagina"><i class="fa-solid fa-envelope"></i> Contatta la Dispensa</h1>
+    
+    <%@ include file="fragments/messaggi_feedback.jsp" %>
 
-        <section class="contact-container">
-            <div class="contact-info">
-                <h3>I nostri recapiti</h3>
-                <div class="info-item">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <div>
-                        <strong>Sede Operativa</strong><br>
-                        Via delle Tradizioni, 12<br>
-                        84084 Fisciano (SA)
-                    </div>
+    <div class="contatti-layout">
+        
+        <div class="contatti-info">
+            <h3>I Nostri Recapiti</h3>
+            <p>Se hai domande sui nostri prodotti artigianali o sul tuo ordine, non esitare a contattarci.</p>
+            
+            <ul class="lista-recapiti">
+                <li><i class="fa-solid fa-location-dot"></i> Via Roma, 10 - 83028 Serino (AV)</li>
+                <li><i class="fa-solid fa-phone"></i> +39 081 1234567</li>
+                <li><i class="fa-solid fa-envelope"></i> info@dispensadigiu.it</li>
+                <li><i class="fa-solid fa-clock"></i> Lun - Ven: 9:00 - 18:00</li>
+            </ul>
+        </div>
+
+        <div class="contatti-form-box">
+            <h3>Inviaci un Messaggio</h3>
+            
+            <form id="formContatti" action="<%= request.getContextPath() %>/ContattiServlet" method="POST" novalidate>
+                
+                <div class="form-group">
+                    <label for="nome">Nome completo</label>
+                    <input type="text" id="nome" name="nome" placeholder="Inserisci il tuo nome e cognome" required>
+                    <span class="errore-inline" id="errore-nome"></span>
                 </div>
-                <div class="info-item">
-                    <i class="fa-solid fa-envelope"></i>
-                    <div>
-                        <strong>Email</strong><br>
-                        info@dispensadigiu.it
-                    </div>
+
+                <div class="form-group">
+                    <label for="email">Indirizzo Email</label>
+                    <input type="email" id="email" name="email" placeholder="mario.rossi@email.it" required>
+                    <span class="errore-inline" id="errore-email"></span>
                 </div>
-                <div class="info-item">
-                    <i class="fa-solid fa-phone"></i>
-                    <div>
-                        <strong>Telefono</strong><br>
-                        +39 089 1234567<br>
-                        <small>Lun - Ven: 9:00 - 18:00</small>
-                    </div>
+
+                <div class="form-group">
+                    <label for="messaggio">Messaggio</label>
+                    <textarea id="messaggio" name="messaggio" rows="5" class="input-textarea" placeholder="Scrivi qui la tua richiesta..." required></textarea>
+                    <span class="errore-inline" id="errore-messaggio"></span>
                 </div>
-            </div>
 
-            <div class="contact-form-wrapper">
-                <h3>Inviaci un messaggio</h3>
-                <form action="#" method="POST" class="contact-form">
-                    <div class="form-group">
-                        <label for="nome">Nome e Cognome *</label>
-                        <input type="text" id="nome" name="nome" placeholder="Es. Mario Rossi" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" placeholder="mario.rossi@email.com" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="oggetto">Oggetto</label>
-                        <select id="oggetto" name="oggetto">
-                            <option value="info">Informazioni sui prodotti</option>
-                            <option value="ordine">Problema con un ordine</option>
-                            <option value="fornitore">Proponi i tuoi prodotti</option>
-                            <option value="altro">Altro</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="messaggio">Messaggio *</label>
-                        <textarea id="messaggio" name="messaggio" rows="5" placeholder="Scrivi qui il tuo messaggio..." required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn-primary">Invia Messaggio <i class="fa-solid fa-paper-plane"></i></button>
-                </form>
-            </div>
-        </section>
-    </main>
+                <button type="submit" class="btn-primary btn-full">Invia Richiesta</button>
+            </form>
+        </div>
 
-    <%@ include file="fragments/footer.jsp" %>
+    </div>
+</main>
 
-    <script src="${pageContext.request.contextPath}/js/main.js"></script>
-</body>
-</html>
+<%@ include file="fragments/footer.jsp" %>

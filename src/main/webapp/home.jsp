@@ -1,24 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Dispensa di Giù | Home</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
 
-    <%@ include file="fragments/header.jsp" %>
+<%@ include file="fragments/header.jsp" %>
 
-    <main>
-        
-    </main>
+<main>
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Dal Sud, direttamente a casa tua.</h1>
+            <p class="hero-subtitle">Senti già il profumo? Riempi la dispensa con i veri sapori della tradizione artigianale meridionale.</p>
+            <div class="hero-actions">
+                <a href="${pageContext.request.contextPath}/Catalogo" class="btn-primary hero-btn">
+                    Fai scorta ora <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
 
-    <%@ include file="fragments/footer.jsp" %>
-
-</body>
-</html>
+<%@ include file="fragments/footer.jsp" %>

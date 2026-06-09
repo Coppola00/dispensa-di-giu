@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<!-- Sezione Vantaggi (Pre-Footer) -->
 <section class="pre-footer">
     <div class="features-row">
         <div class="feature-item">
@@ -21,7 +20,6 @@
     </div>
 </section>
 
-<!-- Footer -->
 <footer class="site-footer">
     <div class="footer-container">
         <div class="footer-col brand-col">
@@ -32,19 +30,9 @@
         <div class="footer-col">
             <h4>Naviga</h4>
             <ul>
-                <li><a href="${pageContext.request.contextPath}/CatalogoServlet">Prodotti</a></li>
-                <li><a href="${pageContext.request.contextPath}/pacco-da-giu.jsp">Pacco da Giù</a></li>
-                <li><a href="${pageContext.request.contextPath}/chi-siamo.jsp">Chi Siamo</a></li>
+                <li><a href="${pageContext.request.contextPath}/home.jsp">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/Catalogo">Prodotti</a></li>
                 <li><a href="${pageContext.request.contextPath}/contatti.jsp">Contatti</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-col">
-            <h4>Aiuto</h4>
-            <ul>
-                <li><a href="#">Spedizioni</a></li>               
-                <li><a href="#">Domande Frequenti</a></li>
-                <li><a href="#">Traccia il tuo ordine</a></li>
             </ul>
         </div>
 
@@ -60,16 +48,17 @@
         <div class="footer-col social-col">
             <h4>Seguici</h4>
             <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
             </div>
+            
             <h4 class="mt-20">Metodi di pagamento</h4>
             <div class="payment-icons">
-                <i class="fa-brands fa-cc-visa"></i>
-                <i class="fa-brands fa-cc-mastercard"></i>
-                <i class="fa-brands fa-cc-paypal"></i>
-                <i class="fa-brands fa-cc-apple-pay"></i>
+                <i class="fa-brands fa-cc-visa" title="Visa"></i>
+                <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+                <i class="fa-brands fa-cc-paypal" title="PayPal"></i>
+                <i class="fa-brands fa-cc-apple-pay" title="Apple Pay"></i>
             </div>
         </div>
     </div>

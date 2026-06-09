@@ -1,13 +1,19 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    String successMsg = (String) request.getAttribute("successMsg");
+    String errorMsg = (String) request.getAttribute("errorMsg");
+%>
 
-<c:if test="${not empty successMsg}">
+<%-- Mostra il box di successo solo se la variabile esiste e non è vuota --%>
+<% if (successMsg != null && !successMsg.trim().isEmpty()) { %>
     <div class="alert-box alert-success">
-        <c:out value="${successMsg}" />
+        <%= successMsg %>
     </div>
-</c:if>
+<% } %>
 
-<c:if test="${not empty errorMsg}">
+<%-- Mostra il box di errore solo se la variabile esiste e non è vuota --%>
+<% if (errorMsg != null && !errorMsg.trim().isEmpty()) { %>
     <div class="alert-box alert-error">
-        <c:out value="${errorMsg}" />
+        <%= errorMsg %>
     </div>
-</c:if>
+<% } %>
