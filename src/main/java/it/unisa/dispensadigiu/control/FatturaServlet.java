@@ -14,18 +14,20 @@ import it.unisa.dispensadigiu.model.OrdineBean;
 import it.unisa.dispensadigiu.model.OrdineDAO;
 import it.unisa.dispensadigiu.model.ElementoCarrelloBean;
 import it.unisa.dispensadigiu.model.UtenteBean;
+import it.unisa.dispensadigiu.model.UtenteDAO;
 
 @WebServlet("/Fattura")
 public class FatturaServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private OrdineDAO ordineDAO = new OrdineDAO();
+    private UtenteDAO utenteDAO = new UtenteDAO(); 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         
-        // Verifica Sicurezza: Solo gli utenti loggati possono vedere le fatture
-        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
-        if (utente == null) {
+        
+        UtenteBean utenteLoggato = (UtenteBean) session.getAttribute("utente");
+        if (utenteLoggato == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
@@ -43,18 +45,25 @@ public class FatturaServlet extends HttpServlet {
             OrdineBean ordine = ordineDAO.doRetrieveById(idOrdine);
             
             if (ordine != null) {
-                // Controllo Sicurezza: l'utente sta guardando la SUA fattura?
-                if (ordine.getIdUtente() != utente.getIdutente()) {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accesso negato a questa fattura.");
+                
+                // Usiamo l'ID utente salvato dentro l'ordine per estrarre il cliente reale dal DB
+                UtenteBean acquirenteReale = utenteDAO.doRetrieveById(ordine.getIdUtente());
+                
+                // Controllo di sicurezza: Se non sei admin e l'ordine NON è il tuo, ti blocco.
+                boolean isAdmin = utenteLoggato.getRuolo() != null && utenteLoggato.getRuolo().equalsIgnoreCase("admin");
+                if (!isAdmin && utenteLoggato.getIdutente() != acquirenteReale.getIdutente()) {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accesso negato: non sei autorizzato a visualizzare questa fattura.");
                     return;
                 }
-                
-                // 2. Recuperiamo i dettagli "congelati" (prodotti e prezzi storici)
+            
+                                
+             
                 List<ElementoCarrelloBean> dettagli = ordineDAO.doRetrieveDettagliByOrdine(idOrdine);
                 
                 // Passiamo i dati alla JSP
                 request.setAttribute("ordineFattura", ordine);
                 request.setAttribute("dettagliFattura", dettagli);
+                request.setAttribute("utenteFattura", acquirenteReale); 
                 request.getRequestDispatcher("/fattura.jsp").forward(request, response);
                 
             } else {

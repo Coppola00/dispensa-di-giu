@@ -172,16 +172,18 @@ public class OrdineDAO {
     }
 
    
-    public List<OrdineBean> storicoOrdiniByDateRange(java.sql.Date dal, java.sql.Date al) throws SQLException {
+    public List<OrdineBean> doRetrieveByDate(String dataInizio, String dataFine) throws SQLException {
         List<OrdineBean> ordini = new ArrayList<>();
-        String query = "SELECT * FROM ordine WHERE DATE(data_ordine) BETWEEN ? AND ? ORDER BY data_ordine DESC";
-        
+        // Usiamo il filtro BETWEEN. Ordiniamo dal più recente al più vecchio
+        String query = "SELECT * FROM ordine WHERE data_ordine BETWEEN ? AND ? ORDER BY data_ordine DESC";
+
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             
-            ps.setDate(1, dal);
-            ps.setDate(2, al);
-            
+            // I parametri passati dal form HTML5 (yyyy-MM-dd) si adattano perfettamente al setString o setDate di SQL
+            ps.setString(1, dataInizio + " 00:00:00");
+            ps.setString(2, dataFine + " 23:59:59");
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     ordini.add(mapRowToOrdine(rs));

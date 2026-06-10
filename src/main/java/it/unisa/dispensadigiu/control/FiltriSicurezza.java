@@ -40,31 +40,45 @@ public class FiltriSicurezza implements Filter {
         httpResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0
         httpResponse.setDateHeader("Expires", 0); // Proxies
         
+        // Recuperiamo l'URI richiesto per sapere esattamente dove vuole andare l'utente
+        String requestURI = httpRequest.getRequestURI();
+        
         // Recuperiamo la sessione (senza creane una nuova se non esiste)
-        HttpSession session = httpRequest.getSession(false) ;
+        HttpSession session = httpRequest.getSession(false);
         
         UtenteBean utente = null;
         if (session != null) {
             utente = (UtenteBean) session.getAttribute("utente");
         }
 
-        // VERIFICA: Se l'utente non è loggato, blocchiamo la richiesta
+        // 1. VERIFICA: Se l'utente non è loggato, blocchiamo la richiesta
         if (utente == null) {
-            // Salviamo il messaggio di errore nella sessione in modo che sopravviva al redirect
             httpRequest.getSession().setAttribute("toastMsg", "Accesso negato. Effettua il login per visualizzare questa pagina.");
-            // Reindirizziamo l'utente alla login
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
             return; 
         }
+        
+        // 2. VERIFICA: Logica di smistamento per l'Amministratore
         else if (utente.getRuolo() != null && utente.getRuolo().equalsIgnoreCase("admin")) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/AdminProdotto");
-            return;
-        } else {    
-        // Se l'utente è loggato, la richiesta può proseguire verso la destinazione originale
-        chain.doFilter(request, response);
+            
+            // L'eccezione: Se l'admin vuole vedere una fattura, lo facciamo passare
+            if (requestURI.contains("/Fattura") || requestURI.contains("/fattura.jsp")) {
+                chain.doFilter(request, response);
+                return;
+            } else {
+                // Se cerca di andare nel Checkout o nell'Area Utente normale, lo rimandiamo al suo pannello
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/AdminProdotto");
+                return;
+            }
+        } 
+        
+        // 3. VERIFICA: Se è un utente normale, lo lasciamo passare
+        else {    
+            chain.doFilter(request, response);
+        }
     }
-    }
+    
     public void destroy() {
-      
+        
     }
 }

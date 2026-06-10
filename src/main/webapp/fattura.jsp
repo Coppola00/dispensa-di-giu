@@ -6,9 +6,8 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <%
+    UtenteBean intestatario = (UtenteBean) request.getAttribute("utenteFattura");
     OrdineBean ordine = (OrdineBean) request.getAttribute("ordineFattura");
-    List<ElementoCarrelloBean> dettagli = (List<ElementoCarrelloBean>) request.getAttribute("dettagliFattura");
-    UtenteBean utente = (UtenteBean) session.getAttribute("utente");
     
     // Formattatore per la data
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -42,8 +41,8 @@
 
         <div class="dati-cliente">
             <h3>Intestato a:</h3>
-            <p><strong><%= utente.getNome() %> <%= utente.getCognome() %></strong></p>
-            <p>Email: <%= utente.getEmail() %></p>
+            <p><strong><%= intestatario.getNome() %> <%= intestatario.getCognome() %></strong></p>
+            <p>Email: <%= intestatario.getEmail() %></p>
         </div>
 
         <table class="tabella-fattura">
@@ -57,7 +56,9 @@
             </thead>
             <tbody>
                 <%
-                    if (dettagli != null) {
+                   List<ElementoCarrelloBean> dettagli = (List<ElementoCarrelloBean>) request.getAttribute("dettagliFattura");	
+                
+                    if (ordine != null) {
                         for (ElementoCarrelloBean item : dettagli) {
                 %>
                         <tr>

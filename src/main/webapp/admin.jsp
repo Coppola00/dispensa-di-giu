@@ -1,8 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="it.unisa.dispensadigiu.model.ProdottoBean" %>
+<%@ page import="it.unisa.dispensadigiu.model.OrdineBean" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <%@ include file="fragments/header.jsp" %>
+
+<%
+    // Recupero variabili per il filtro date degli ordini
+    String dataInizio = (String) request.getAttribute("dataInizioSelezionata");
+    String dataFine = (String) request.getAttribute("dataFineSelezionata");
+    if(dataInizio == null) dataInizio = "";
+    if(dataFine == null) dataFine = "";
+
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+%>
 
 <main class="container-semplice">
     
@@ -89,15 +101,84 @@
                             <td><strong><%= p.getNome() %></strong></td>
                             <td><%= p.getCategoria() %></td>
                             <td><%= String.format("%.2f", p.getPrezzoUnitario()) %> &euro;</td>
-                            
                             <td><%= (p.getIva() != null) ? String.format("%.0f", p.getIva()) : "22" %>%</td>
-                            
                             <td class="testo-centro">
                                 <a href="<%= request.getContextPath() %>/AdminProdotto?action=elimina&idProdotto=<%= p.getIdProdotto() %>" 
                                    class="btn-rimuovi-admin" 
                                    onclick="return confirm('Sei sicuro di voler eliminare definitivamente questo prodotto dalla dispensa?');">
                                     <i class="fa-solid fa-trash-can"></i> Elimina
                                 </a>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        <%
+            }
+        %>
+    </div>
+
+    <div class="box-admin-form" style="margin-top: 3rem; border-top: 4px solid var(--verde-oliva);">
+        <h3><i class="fa-solid fa-filter"></i> Filtra Registro Ordini Clienti</h3>
+        
+        <form action="<%= request.getContextPath() %>/AdminProdotto" method="GET" class="form-filtro-date">
+            <div class="form-group-orizzontale">
+                <div class="campo-form">
+                    <label for="dataInizio">Data Inizio (Dal):</label>
+                    <input type="date" id="dataInizio" name="dataInizio" value="<%= dataInizio %>">
+                </div>
+                <div class="campo-form">
+                    <label for="dataFine">Data Fine (Al):</label>
+                    <input type="date" id="dataFine" name="dataFine" value="<%= dataFine %>">
+                </div>
+                <div class="campo-form" style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                    <button type="submit" class="btn-primary" style="margin-bottom: 0; padding: 0.75rem 1.5rem;">Applica Filtro</button>
+                    <% if(!dataInizio.isEmpty() || !dataFine.isEmpty()) { %>
+                        <a href="<%= request.getContextPath() %>/AdminProdotto" class="btn-logout" style="padding: 0.65rem 1rem; text-align:center; line-height:1.2;">Annulla</a>
+                    <% } %>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="box-admin-tabella">
+        <h3><i class="fa-solid fa-list-check"></i> Elenco Storico delle Transazioni</h3>
+        
+        <%
+            List<OrdineBean> ordini = (List<OrdineBean>) request.getAttribute("listaOrdiniAdmin");
+            if (ordini == null || ordini.isEmpty()) {
+        %>
+            <p>Nessun ordine registrato nel sistema per il periodo selezionato.</p>
+        <%
+            } else {
+        %>
+            <table class="tabella-admin">
+                <thead>
+                    <tr>
+                        <th>ID Ordine</th>
+                        <th>Data e Ora</th>
+                        <th>ID Acquirente</th>
+                        <th>Totale Lordo</th>
+                        <th>Stato Spedizione</th>
+                        <th class="testo-centro">Dettaglio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (OrdineBean o : ordini) { %>
+                        <tr>
+                            <td>#<%= o.getIdOrdine() %></td>
+                            <td><%= (o.getDataOrdine() != null) ? sdf.format(o.getDataOrdine()) : "N/D" %></td>
+                            <td>Codice Utente: <%= o.getIdUtente() %></td>
+                            <td><strong><%= String.format("%.2f", o.getTotaleOrdine()) %> &euro;</strong></td>
+                            <td>
+                                <span class="badge-stato <%= o.getStatoOrdine().toLowerCase() %>">
+                                    <%= o.getStatoOrdine() %>
+                                </span>
+                            </td>
+                            <td class="testo-centro">
+                                <a href="<%= request.getContextPath() %>/Fattura?id=<%= o.getIdOrdine() %>" class="btn-visualizza-ordine" title="Vedi Dettagli e Stampa">
+                                            <i class="fa-solid fa-file-invoice"></i>Vedi Fattura
+                                        </a>
                             </td>
                         </tr>
                     <% } %>

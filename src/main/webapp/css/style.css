@@ -761,6 +761,34 @@ input:focus {
   cursor: pointer;
 }
 
+/* Badge grafici per monitorare lo stato degli ordini */
+.badge-stato {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Colorazione dinamica in base allo stato testuale */
+.badge-stato.elaborazione, .badge-stato.ricevuto {
+  background-color: #FFF3CD;
+  color: #856404;
+  border: 1px solid #FFEBAA;
+}
+
+.badge-stato.spedito {
+  background-color: #D4EDDA;
+  color: #155724;
+  border: 1px solid #C3E6CB;
+}
+
+.badge-stato.annullato {
+  background-color: #F8D7DA;
+  color: #721C24;
+  border: 1px solid #F5C6CB;
+}
 /* ==========================================================================
    Fattura (fattura.jsp)
    ========================================================================== */
@@ -941,6 +969,78 @@ input:focus {
   font-size: 0.85rem;
 }
 
+/* --- PAGINE DI ERRORE PERSONALIZZATE --- */
+
+.container-errore-page {
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-errore {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: var(--bianco-crema);
+  padding: 3rem;
+  border-radius: 12px;
+  border: 1px solid var(--grigio-neutro);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.box-errore h2 {
+  font-size: 1.8rem;
+  color: var(--blu-profondo);
+  margin-top: 0;
+}
+
+/* Icone grandi di notifica */
+.icona-errore {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+}
+.icona-errore.colore-404 {
+  color: var(--verde-oliva);
+}
+.icona-errore.colore-500 {
+  color: #721C24;
+}
+
+/* Numeri grandi del codice di errore (404 / 500) */
+.codice-errore {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.codice-errore.colore-404 {
+  color: var(--blu-profondo);
+}
+.codice-errore.colore-500 {
+  color: #721C24;
+}
+
+/* Descrizione testuale dell'anomalia */
+.testo-descrizione-errore {
+  margin: 1.5rem 0;
+  color: var(--grigio-scuro);
+  line-height: 1.5;
+}
+
+/* Box per la stampa dello StackTrace tecnico (solo Errore 500) */
+.debug-stacktrace-box {
+  text-align: left;
+  background-color: #F8D7DA;
+  color: #721C24;
+  padding: 1rem;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 2rem;
+  border: 1px solid #F5C6CB;
+}
+
 /* ==========================================================================
    Media Queries (Responsive per Smartphone e Tablet)
    ========================================================================== */
@@ -954,7 +1054,7 @@ input:focus {
 @media (max-width: 768px) {
   /* Header e Navigazione */
   .top-bar {
-    display: none; /* Nasconde barra promozionale su mobile */
+    display: none; 
   }
 
   .navbar {

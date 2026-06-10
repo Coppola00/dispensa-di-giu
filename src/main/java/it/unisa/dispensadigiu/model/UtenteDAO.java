@@ -42,7 +42,7 @@ public class UtenteDAO {
                     utente.setCognome(rs.getString("cognome"));
                     utente.setEmail(rs.getString("email"));
                     utente.setRuolo(rs.getString("ruolo"));
-                    utente.setIndirizzo(rs.getString("indirizzo")); // Aggiunto per comodità futura
+                    utente.setIndirizzo(rs.getString("indirizzo")); 
                     return utente;
                 }
             }
@@ -60,30 +60,28 @@ public class UtenteDAO {
             }
         }
     }
-	
-    public void aggiornaProfilo(UtenteBean utente) throws SQLException {
-        String query = "UPDATE utente SET nome = ?, cognome = ?, email = ? WHERE idutente = ?";
-        try (Connection con = ConnectionDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            
-            ps.setString(1, utente.getNome());
-            ps.setString(2, utente.getCognome());
-            ps.setString(3, utente.getEmail());
-            ps.setInt(4, utente.getIdutente()); 
-            
-            ps.executeUpdate();
-        }
-    }
 
-    public void aggiornaPassword(int idUtente, String nuovaPassword) throws SQLException {
-        String query = "UPDATE utente SET password = ? WHERE idutente = ?";
+    public UtenteBean doRetrieveById(int idUtente) throws SQLException {
+        String query = "SELECT * FROM utente WHERE idUtente = ?";
+        
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             
-            ps.setString(1, PasswordUtils.hashPassword(nuovaPassword));
-            ps.setInt(2, idUtente);
+            ps.setInt(1, idUtente);
             
-            ps.executeUpdate();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    UtenteBean u = new UtenteBean();
+                    u.setIdutente(rs.getInt("idUtente"));
+                    u.setNome(rs.getString("nome"));
+                    u.setCognome(rs.getString("cognome"));
+                    u.setEmail(rs.getString("email"));
+                    u.setRuolo(rs.getString("ruolo"));
+                    
+                    return u; 
+                }
+            }
         }
-    }
+        return null; 
+	}
 }

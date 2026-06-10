@@ -20,37 +20,57 @@ import javax.servlet.http.Part;
 
 import it.unisa.dispensadigiu.model.ProdottoBean;
 import it.unisa.dispensadigiu.model.ProdottoDAO;
+import it.unisa.dispensadigiu.model.OrdineBean;
+import it.unisa.dispensadigiu.model.OrdineDAO;
 
 @WebServlet("/AdminProdotto")
 @MultipartConfig(
-	    fileSizeThreshold = 1024 * 1024 * 1,  // 1 MB custodia temporanea in memoria
-	    maxFileSize = 1024 * 1024 * 5,       // 5 MB dimensione massima per singolo file
-	    maxRequestSize = 1024 * 1024 * 10    // 10 MB dimensione massima totale del form
-	)
-public class AdminProdottoServlet extends HttpServlet {
+        fileSizeThreshold = 1024 * 1024 * 1,  // 1 MB
+        maxFileSize = 1024 * 1024 * 5,       // 5 MB
+        maxRequestSize = 1024 * 1024 * 10    // 10 MB
+)
+public class AdminServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProdottoDAO prodottoDAO = new ProdottoDAO();
+    private OrdineDAO ordineDAO = new OrdineDAO(); // Istanza del DAO Ordini
 
-    
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Forza anti-cache per evitare problemi con il tasto indietro del browser
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         String action = request.getParameter("action");
 
         try {
             // OPERAZIONE: ELIMINA PRODOTTO
             if ("elimina".equals(action)) {
                 int idProdotto = Integer.parseInt(request.getParameter("idProdotto"));
-                
-                // Chiamata al metodo doDelete del DAO
                 prodottoDAO.doDelete(idProdotto); 
-                
                 request.getSession().setAttribute("toastMsg", "Prodotto rimosso con successo dall'inventario.");
                 response.sendRedirect(request.getContextPath() + "/AdminProdotto");
                 return;
             }
 
-           
+            // 1. CARICAMENTO PRODOTTI
             List<ProdottoBean> prodotti = prodottoDAO.trovaTutti();
             request.setAttribute("listaProdottiAdmin", prodotti);
+            
+            // 2. CARICAMENTO E FILTRO ORDINI
+            String dataInizio = request.getParameter("dataInizio");
+            String dataFine = request.getParameter("dataFine");
+            List<OrdineBean> ordini;
+
+            if (dataInizio != null && !dataInizio.trim().isEmpty() && dataFine != null && !dataFine.trim().isEmpty()) {
+                // Se sono presenti le date, effettua il filtraggio nel DB
+                ordini = ordineDAO.doRetrieveByDate(dataInizio, dataFine);
+                request.setAttribute("dataInizioSelezionata", dataInizio);
+                request.setAttribute("dataFineSelezionata", dataFine);
+            } else {
+                // Altrimenti recupera lo storico completo
+                ordini = ordineDAO.doRetrieveAll();
+            }
+            request.setAttribute("listaOrdiniAdmin", ordini);
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("/admin.jsp");
             dispatcher.forward(request, response);
@@ -61,42 +81,33 @@ public class AdminProdottoServlet extends HttpServlet {
         }
     }
 
-    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
         if ("inserisci".equals(action)) {
             try {
-                // Recupero campi dal form
                 String nome = request.getParameter("nome");
                 String categoria = request.getParameter("categoria");
                 double prezzo = Double.parseDouble(request.getParameter("prezzo"));
                 double iva = Double.parseDouble(request.getParameter("iva"));
                 String descrizione = request.getParameter("descrizione");
 
-                Part filePart = request.getPart("immagine"); // Prende l'input file del form
-                
-                // Estrae il nome originale del file (es. "provola.jpg")
+                Part filePart = request.getPart("immagine");
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 
-                // Definiamo dove salvare il file sul server (cartella 'img' della webapp)
                 String percorsoDestinazione = getServletContext().getRealPath("") + File.separator + "img";
                 File cartella = new File(percorsoDestinazione);
                 if (!cartella.exists()) {
-                    cartella.mkdir(); // Crea la cartella img se non esiste
+                    cartella.mkdir();
                 }
 
-                // Scrittura fisica del file sul disco del server
                 File fileSalvato = new File(cartella, fileName);
                 try (InputStream fileContent = filePart.getInputStream()) {
                     Files.copy(fileContent, fileSalvato.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
                 
-                // Nel database salviamo solo il percorso relativo che servirà ai tag <img>
                 String percorsoRelativoDB = "img/" + fileName;
                 
-                
-                // Costruzione del Bean
                 ProdottoBean nuovoProdotto = new ProdottoBean();
                 nuovoProdotto.setNome(nome);
                 nuovoProdotto.setCategoria(categoria);
@@ -105,7 +116,6 @@ public class AdminProdottoServlet extends HttpServlet {
                 nuovoProdotto.setImmagineUrl(percorsoRelativoDB);
                 nuovoProdotto.setDescrizione(descrizione);
 
-                // Chiamata al metodo doSave del DAO
                 prodottoDAO.doSave(nuovoProdotto); 
 
                 request.getSession().setAttribute("toastMsg", "Nuovo prodotto inserito con successo nella Dispensa!");

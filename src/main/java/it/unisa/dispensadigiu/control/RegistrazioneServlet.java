@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import it.unisa.dispensadigiu.model.UtenteBean;
 import it.unisa.dispensadigiu.model.UtenteDAO;
-import it.unisa.dispensadigiu.model.PasswordUtils; 
 
 @WebServlet("/RegistrazioneServlet")
 public class RegistrazioneServlet extends HttpServlet {
@@ -22,10 +21,10 @@ public class RegistrazioneServlet extends HttpServlet {
         String nome = request.getParameter("nome");
         String cognome = request.getParameter("cognome"); 
         String email = request.getParameter("email");
-        String passwordPiatta = request.getParameter("password");
+        String password = request.getParameter("password");
         
         // Controllo lato server di base 
-        if (nome == null || email == null || passwordPiatta == null || nome.isEmpty() || email.isEmpty() || passwordPiatta.isEmpty()) {
+        if (nome == null || email == null || password == null || nome.isEmpty() || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("errorMsg", "Compila tutti i campi obbligatori.");
             RequestDispatcher dispatcher = request.getRequestDispatcher("registrazione.jsp");
             dispatcher.forward(request, response);
@@ -33,15 +32,13 @@ public class RegistrazioneServlet extends HttpServlet {
         }
 
         try {
-            // 2. Cifratura della password 
-            String passwordCifrata = PasswordUtils.hashPassword(passwordPiatta);
-
+            
             // 3. Creazione del Java Bean (Model)
             UtenteBean nuovoUtente = new UtenteBean();
             nuovoUtente.setNome(nome);
             nuovoUtente.setCognome(cognome != null ? cognome : ""); 
             nuovoUtente.setEmail(email);
-            nuovoUtente.setPassword(passwordCifrata);
+            nuovoUtente.setPassword(password);
             nuovoUtente.setRuolo("User"); 
 
             // 4. Salvataggio nel Database tramite DAO
