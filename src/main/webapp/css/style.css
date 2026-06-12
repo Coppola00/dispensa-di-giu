@@ -1,8 +1,6 @@
-/* ==========================================================================
-   Variabili Globali e Reset
-   ========================================================================== */
+/* VARIABILI GLOBALI E RESET */
+   
 :root {
-  /* Palette Completa "Neo-Rustico" */
   --rosso-pomodoro: #E63946;  
   --giallo-sole: #FFB703;     
   --bianco-crema: #FDFBF7;    
@@ -11,8 +9,6 @@
   --grigio-neutro: #6C757D;
   --verde-oliva: #4A5D23;
   --grigio-scuro: #2D2D2D;
-
-  /* Layout */
   --max-width: 1200px;
   --header-height: 80px;
 }
@@ -44,39 +40,43 @@ img {
   height: auto;
 }
 
-/* ==========================================================================
-   Componenti Globali (Bottoni e Input)
-   ========================================================================== */
-.btn-primary {
-  display: inline-block;
-  background-color: var(--rosso-pomodoro);
-  color: var(--bianco-crema);
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 8px; /* Semplificato rispetto ai bordi troppo tondi */
-  border: none;
-  cursor: pointer;
+
+/* CLASSI GENERALI */
+
+.testo-centro { text-align: center; }
+.testo-destra { text-align: right; }
+
+.titolo-pagina {
   text-align: center;
-  transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #c92f39;
-}
-
-.btn-secondario {
-  display: inline-block;
-  background-color: transparent;
+  margin-bottom: 2rem;
   color: var(--blu-profondo);
+}
+
+/* BOTTONI GENERALI */
+
+.btn-primary, .btn-secondario, .btn-logout {
+  display: inline-block;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 8px;
-  border: 1px solid var(--blu-profondo);
-  cursor: pointer;
   text-align: center;
+  cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--rosso-pomodoro);
+  color: var(--bianco-crema);
+  border: none;
+}
+
+.btn-primary:hover { background-color: #c92f39; }
+
+.btn-secondario {
+  background-color: transparent;
+  color: var(--blu-profondo);
+  border: 1px solid var(--blu-profondo);
 }
 
 .btn-secondario:hover {
@@ -84,14 +84,22 @@ img {
   color: #fff;
 }
 
-.btn-full {
-  width: 100%;
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--grigio-scuro);
+  border: 1px solid var(--grigio-neutro);
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"] {
+.btn-full { width: 100%; }
+
+/*  FORM E INPUT  */
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], .input-textarea {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid var(--grigio-neutro);
@@ -100,51 +108,89 @@ input[type="number"] {
   font-size: 1rem;
 }
 
-input:focus {
+.input-textarea { resize: vertical; }
+
+input:focus, .input-textarea:focus {
   outline: none;
   border-color: var(--rosso-pomodoro);
 }
 
-.titolo-pagina {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--blu-profondo);
+/* BOX STANDARD */
+.auth-card, .card-prodotto, .prodotto-dettaglio-singolo, .carrello-prodotti, .carrello-barra-totale, 
+.box-profilo-utente, .box-storico-ordini, .box-admin-form, .box-admin-tabella, .contatti-layout {
+  background-color: #fff;
+  border: 1px solid #EAEAEA;
+  border-radius: 8px;
 }
 
-/* ==========================================================================
-   Messaggi Feedback (messaggi-feedback.jsp)
-   ========================================================================== */
+/* CONTENITORI STANDARD */
+.container-semplice { 
+	max-width: 900px; 
+	margin: 3rem auto; 
+	padding: 0 1.5rem;
+	 }
+
+/* TITOLI STANDARD */
+.box-profilo-utente h3, .box-storico-ordini h3, .box-admin-form h3, .box-admin-tabella h3, 
+.contatti-info h3, .contatti-form-box h3 {
+  color: var(--blu-profondo);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--pesca-caldo);
+  padding-bottom: 0.5rem;
+}
+
+/* TABELLE STANDARD */
+.tabella-carrello, .tabella-ordini, .tabella-admin, .tabella-fattura {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabella-carrello th, .tabella-ordini th, .tabella-admin th, .tabella-fattura th {
+  background-color: var(--pesca-caldo);
+  padding: 1rem;
+  border-bottom: 1px solid #EAEAEA;
+}
+
+.tabella-admin th { color: var(--blu-profondo); }
+
+.tabella-carrello td, .tabella-ordini td, .tabella-admin td, .tabella-fattura td {
+  padding: 1rem;
+  border-bottom: 1px solid #F0F0F0;
+  vertical-align: middle;
+}
+
+/* MESSAGGI ALERT */
+
 .alert-box {
   padding: 1.2rem 1.5rem;
   margin-bottom: 2rem;
   border-radius: 8px;
-  font-weight: 800; /* Testo più spesso */
+  font-weight: 800;
   text-align: center;
-  color: var(--bianco-crema); /* Testo chiaro per risaltare sullo sfondo scuro */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Ombra marcata per farli "sollevare" dalla pagina */
+  color: var(--bianco-crema);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   font-size: 1.1rem;
 }
 
-.alert-success {
-  background-color: var(--verde-oliva);
-  border: 2px solid #364519; /* Tonalità di verde ancora più scura per il bordo */
-}
+.alert-success { background-color: var(--verde-oliva); border: 2px solid #364519; }
+.alert-error { background-color: var(--rosso-pomodoro); border: 2px solid #b32b35; }
+.errore-inline { color: var(--rosso-pomodoro); font-size: 0.85rem; display: block; margin-top: 0.3rem; }
 
-.alert-error {
-  background-color: var(--rosso-pomodoro);
-  border: 2px solid #b32b35; /* Rosso più scuro per il bordo */
-}
+/* BADGE STATO ORDINI */
 
-.errore-inline {
-  color: var(--rosso-pomodoro);
+.badge-stato {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
   font-size: 0.85rem;
-  display: block;
-  margin-top: 0.3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: var(--pesca-caldo);
 }
 
-/* ==========================================================================
-   Header e Menu (header.jsp, menu.jsp)
-   ========================================================================== */
+/* LAYOUT BASE (HEADER, RICERCA, FOOTER)  */
+ 
 .site-header {
   background-color: #fff;
   border-bottom: 1px solid #EAEAEA;
@@ -208,6 +254,8 @@ input:focus {
   gap: 1.5rem;
 }
 
+/* RICERCA E SUGGERIMENTI AJAX */
+
 .search-wrapper {
   display: flex;
 }
@@ -232,6 +280,43 @@ input:focus {
   cursor: pointer;
 }
 
+.blocco-ricerca-header {
+  position: relative;
+}
+
+#suggerimentiRicerca {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%;
+  background-color: var(--bianco-crema);
+  border: 1px solid var(--grigio-neutro);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  z-index: 999; 
+  max-height: 300px;
+}
+
+.suggerimento-item {
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  color: var(--grigio-scuro);
+  font-weight: 600;
+  border-bottom: 1px solid #F0F0F0;
+  transition: background-color 0.2s ease;
+}
+
+.suggerimento-item:last-child {
+  border-bottom: none;
+}
+
+.suggerimento-item:hover {
+  background-color: var(--pesca-caldo);
+  color: var(--blu-profondo);
+}
+
+/* ICONA CARRELLO */
+
 .cart-btn {
   position: relative;
   font-weight: bold;
@@ -251,48 +336,71 @@ input:focus {
   right: -10px;
 }
 
-/* Contenitore della ricerca posizionato relativamente per ancorare la tendina */
-.blocco-ricerca-header {
-  position: relative;
-}
+/*  FOOTER  */
 
-/* Il box dei suggerimenti fluttuante */
-#suggerimentiRicerca {
-  position: absolute;
-  top: 100%; /* Si posiziona esattamente sotto l'input */
-  left: 0;
-  width: 100%;
-  background-color: var(--bianco-crema);
-  border: 1px solid var(--grigio-neutro);
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-  z-index: 999; /* Passa sopra a qualsiasi elemento della pagina */
-  max-height: 300px;
-  overflow-y: auto; /* Abilita la barra di scorrimento interna se ci sono molti risultati */
-}
-
-/* La singola riga di prodotto trovata */
-.suggerimento-item {
-  padding: 0.8rem 1.2rem;
-  cursor: pointer;
-  color: var(--grigio-scuro);
-  font-weight: 600;
-  border-bottom: 1px solid #F0F0F0;
-  transition: background-color 0.2s ease;
-}
-
-.suggerimento-item:last-child {
-  border-bottom: none;
-}
-
-/* Effetto selezione sulla riga */
-.suggerimento-item:hover {
+.pre-footer {
   background-color: var(--pesca-caldo);
-  color: var(--blu-profondo);
+  padding: 2rem;
+  text-align: center;
 }
-/* ==========================================================================
-   Home Page (home.jsp)
-   ========================================================================== */
+
+.features-row {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.feature-item i {
+  font-size: 2rem;
+  color: var(--rosso-pomodoro);
+  margin-bottom: 0.5rem;
+}
+
+.site-footer {
+  background-color: var(--verde-oliva);
+  color: var(--bianco-crema);
+  padding: 3rem 2rem 1rem 2rem;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.footer-col h4 {
+  color: var(--giallo-sole);
+  margin-bottom: 1rem;
+}
+
+.footer-col ul li {
+  margin-bottom: 0.5rem;
+}
+
+.social-icons a {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.payment-icons i {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+}
+
+/* STILI DI PAGINA SPECIFICI 
+   Home Page                  */
 .hero-section {
   position: relative;
   background-image: url('../img/sfondo-hero-section.png'); 
@@ -330,9 +438,7 @@ input:focus {
   margin-bottom: 2rem;
 }
 
-/* ==========================================================================
-   Autenticazione (login.jsp, registrazione.jsp)
-   ========================================================================== */
+/*  Autenticazione  */
 .container-auth {
   display: flex;
   justify-content: center;
@@ -376,9 +482,7 @@ input:focus {
   font-weight: bold;
 }
 
-/* ==========================================================================
-   Catalogo (catalogo.jsp)
-   ========================================================================== */
+/*  Catalogo  */
 .container-catalogo {
   max-width: var(--max-width);
   margin: 2rem auto;
@@ -467,14 +571,7 @@ input:focus {
   cursor: pointer;
 }
 
-/* ==========================================================================
-   Dettaglio Prodotto (dettaglio-prodotto.jsp)
-   ========================================================================== */
-.container-semplice {
-  max-width: 900px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
-}
+/* Dettaglio Prodotto  */
 
 .prodotto-dettaglio-singolo {
   display: flex;
@@ -526,9 +623,8 @@ input:focus {
   width: 80px;
 }
 
-/* ==========================================================================
-   Carrello (carrello.jsp)
-   ========================================================================== */
+/* Carrello e Ordini */
+
 .container-carrello {
   max-width: 1000px;
   margin: 2rem auto;
@@ -557,24 +653,6 @@ input:focus {
   border: 1px solid #EAEAEA;
   border-radius: 8px;
   overflow-x: auto;
-}
-
-.tabella-carrello, .tabella-ordini {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.tabella-carrello th, .tabella-ordini th {
-  background-color: var(--pesca-caldo);
-  padding: 1rem;
-  border-bottom: 1px solid #EAEAEA;
-}
-
-.tabella-carrello td, .tabella-ordini td {
-  padding: 1rem;
-  border-bottom: 1px solid #EAEAEA;
-  vertical-align: middle;
 }
 
 .td-prodotto {
@@ -632,9 +710,7 @@ input:focus {
   font-size: 1.3rem;
 }
 
-/* ==========================================================================
-   Area Utente (area-utente.jsp)
-   ========================================================================== */
+/*  Area Utente */
 .container-area-utente {
   max-width: var(--max-width);
   margin: 2rem auto;
@@ -655,42 +731,19 @@ input:focus {
   padding: 1.5rem;
 }
 
-.box-profilo-utente h3, .box-storico-ordini h3 {
-  border-bottom: 2px solid var(--pesca-caldo);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
-}
-
 .separatore-profilo {
   border: 0;
   border-top: 1px solid #EAEAEA;
   margin: 1.5rem 0;
 }
 
-.badge-stato {
-  background-color: var(--pesca-caldo);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-/* ==========================================================================
-   Area Amministratore 
-   ========================================================================== */
+/*  Area Amministratore */
 .box-admin-form, .box-admin-tabella {
   background-color: #fff;
   border: 1px solid #EAEAEA;
   border-radius: 8px;
   padding: 2rem;
   margin-bottom: 2.5rem;
-}
-
-.box-admin-form h3, .box-admin-tabella h3 {
-  color: var(--blu-profondo);
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--pesca-caldo);
-  padding-bottom: 0.5rem;
 }
 
 .form-group-orizzontale {
@@ -707,23 +760,6 @@ input:focus {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-}
-
-.tabella-admin {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.tabella-admin th, .tabella-admin td {
-  padding: 1rem;
-  border-bottom: 1px solid #F0F0F0;
-  text-align: left;
-}
-
-.tabella-admin th {
-  background-color: var(--pesca-caldo);
-  color: var(--blu-profondo);
 }
 
 .img-mini-admin {
@@ -745,259 +781,29 @@ input:focus {
   background-color: var(--pesca-caldo);
 }
 
-/* Pulsante di Logout */
-.btn-logout {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: transparent;
-  color: var(--grigio-scuro);
-  border: 1px solid var(--grigio-neutro);
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-/* --- SEZIONE FILTRO ORDINI (Admin) --- */
-
-/* Contenitore principale del form di filtro */
 .box-filtro-ordini {
     margin-top: 3rem;
     border-top: 4px solid var(--verde-oliva);
 }
 
-/* Allineamento dei bottoni accanto agli input della data */
 .azioni-filtro {
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
 }
 
-/* Stili specifici per il bottone di applicazione del filtro */
 .btn-applica {
     margin-bottom: 0;
     padding: 0.75rem 1.5rem;
 }
 
-/* Stili specifici per il bottone per resettare/annullare il filtro */
 .btn-annulla {
     padding: 0.65rem 1rem;
     text-align: center;
     line-height: 1.2;
 }
 
-/* Badge grafici per monitorare lo stato degli ordini */
-.badge-stato {
-  display: inline-block;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-/* Colorazione dinamica in base allo stato testuale */
-.badge-stato.elaborazione, .badge-stato.ricevuto {
-  background-color: #FFF3CD;
-  color: #856404;
-  border: 1px solid #FFEBAA;
-}
-
-.badge-stato.spedito {
-  background-color: #D4EDDA;
-  color: #155724;
-  border: 1px solid #C3E6CB;
-}
-
-.badge-stato.annullato {
-  background-color: #F8D7DA;
-  color: #721C24;
-  border: 1px solid #F5C6CB;
-}
-/* ==========================================================================
-   Fattura (fattura.jsp)
-   ========================================================================== */
-.container-fattura {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
-}
-
-.box-fattura {
-  background-color: #fff;
-  padding: 2rem;
-  border: 1px solid #EAEAEA;
-}
-
-.intestazione-fattura {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-
-.separatore-fattura {
-  border: 0;
-  border-top: 1px dashed #EAEAEA;
-  margin: 1.5rem 0;
-}
-
-.tabella-fattura {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 2rem;
-}
-
-.tabella-fattura th, .tabella-fattura td {
-  padding: 0.8rem;
-  border-bottom: 1px solid #EAEAEA;
-}
-
-.testo-centro { text-align: center; }
-.testo-destra { text-align: right; }
-
-.totali-fattura {
-  text-align: right;
-}
-
-.totale-netto {
-  font-size: 1.5rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 2px solid #EAEAEA;
-}
-
-.azioni-fattura {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-/* ==========================================================================
-   Pagina Contatti
-   ========================================================================== */
-.contatti-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 3rem;
-  background-color: #fff;
-  padding: 2.5rem;
-  border-radius: 8px;
-  border: 1px solid #EAEAEA;
-}
-
-.contatti-info h3, 
-.contatti-form-box h3 {
-  color: var(--blu-profondo);
-  margin-bottom: 1rem;
-  border-bottom: 2px solid var(--pesca-caldo);
-  padding-bottom: 0.5rem;
-}
-
-.contatti-info p {
-  color: var(--grigio-neutro);
-  margin-bottom: 1.5rem;
-}
-
-.lista-recapiti li {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--grigio-scuro);
-}
-
-.lista-recapiti i {
-  color: var(--rosso-pomodoro);
-  font-size: 1.1rem;
-  width: 20px; 
-  text-align: center;
-}
-
-.input-textarea {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid var(--grigio-neutro);
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 1rem;
-  resize: vertical; 
-}
-
-.input-textarea:focus {
-  outline: none;
-  border-color: var(--rosso-pomodoro);
-}
-
-
-/* ==========================================================================
-   Footer (footer.jsp)
-   ========================================================================== */
-.pre-footer {
-  background-color: var(--pesca-caldo);
-  padding: 2rem;
-  text-align: center;
-}
-
-.features-row {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
-
-.feature-item i {
-  font-size: 2rem;
-  color: var(--rosso-pomodoro);
-  margin-bottom: 0.5rem;
-}
-
-.site-footer {
-  background-color: var(--verde-oliva);
-  color: var(--bianco-crema);
-  padding: 3rem 2rem 1rem 2rem;
-}
-
-.footer-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
-
-.footer-col h4 {
-  color: var(--giallo-sole);
-  margin-bottom: 1rem;
-}
-
-.footer-col ul li {
-  margin-bottom: 0.5rem;
-}
-
-.social-icons a {
-  font-size: 1.5rem;
-  margin-right: 1rem;
-}
-
-.payment-icons i {
-  font-size: 2rem;
-  margin-right: 0.5rem;
-}
-
-.footer-bottom {
-  text-align: center;
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.85rem;
-}
-
-/* --- PAGINE DI ERRORE PERSONALIZZATE --- */
+/* PAGINE DI ERRORE PERSONALIZZATE */
 
 .container-errore-page {
   padding: 4rem 2rem;
@@ -1023,7 +829,6 @@ input:focus {
   margin-top: 0;
 }
 
-/* Icone grandi di notifica */
 .icona-errore {
   font-size: 5rem;
   margin-bottom: 1.5rem;
@@ -1035,7 +840,6 @@ input:focus {
   color: #721C24;
 }
 
-/* Numeri grandi del codice di errore (404 / 500) */
 .codice-errore {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -1047,14 +851,12 @@ input:focus {
   color: #721C24;
 }
 
-/* Descrizione testuale dell'anomalia */
 .testo-descrizione-errore {
   margin: 1.5rem 0;
   color: var(--grigio-scuro);
   line-height: 1.5;
 }
 
-/* Box per la stampa dello StackTrace tecnico (solo Errore 500) */
 .debug-stacktrace-box {
   text-align: left;
   background-color: #F8D7DA;
@@ -1069,9 +871,85 @@ input:focus {
   border: 1px solid #F5C6CB;
 }
 
+/* Fattura */
+.container-fattura {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.box-fattura {
+  background-color: #fff;
+  padding: 2rem;
+  border: 1px solid #EAEAEA;
+}
+
+.intestazione-fattura {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.separatore-fattura {
+  border: 0;
+  border-top: 1px dashed #EAEAEA;
+  margin: 1.5rem 0;
+}
+
+.totali-fattura {
+  text-align: right;
+}
+
+.totale-netto {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #EAEAEA;
+}
+
+.azioni-fattura {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Pagina Contatti */
+.contatti-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 3rem;
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 8px;
+  border: 1px solid #EAEAEA;
+}
+
+.contatti-info p {
+  color: var(--grigio-neutro);
+  margin-bottom: 1.5rem;
+}
+
+.lista-recapiti li {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--grigio-scuro);
+}
+
+.lista-recapiti i {
+  color: var(--rosso-pomodoro);
+  font-size: 1.1rem;
+  width: 20px; 
+  text-align: center;
+}
+
+
 /* ==========================================================================
    Media Queries (Responsive per Smartphone e Tablet)
    ========================================================================== */
+   
 @media (max-width: 992px) {
   /* Adatta griglia area utente */
   .area-utente-layout {
@@ -1080,7 +958,6 @@ input:focus {
 }
 
 @media (max-width: 768px) {
-  /* Header e Navigazione */
   .top-bar {
     display: none; 
   }
@@ -1090,7 +967,6 @@ input:focus {
     height: auto;
     padding: 1rem;
   }
-
 
   .header-menu {
     display: none;
@@ -1125,12 +1001,11 @@ input:focus {
     width: 100%;
   }
 
-  /* Home */
+  */* Home */
   .hero-title {
     font-size: 2rem;
   }
 
-  /* Dettaglio Prodotto */
   .prodotto-dettaglio-singolo {
     flex-direction: column;
     gap: 1.5rem;
