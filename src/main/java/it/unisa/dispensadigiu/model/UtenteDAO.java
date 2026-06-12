@@ -15,13 +15,9 @@ public class UtenteDAO {
             ps.setString(1, utente.getNome());
             ps.setString(2, utente.getCognome());
             ps.setString(3, utente.getEmail());
-            
-            // FIX: Ora la password viene cifrata prima di essere inserita nel DB
-            ps.setString(4, PasswordUtils.hashPassword(utente.getPassword()));
-            
-            // FIX: Case-sensitive per combaciare con l'ENUM del DB ('User' e non 'USER')
-            ps.setString(5, utente.getRuolo() != null ? utente.getRuolo() : "User");
-            
+            // Qui avviene la cifratura della password
+            ps.setString(4, PasswordUtils.hashPassword(utente.getPassword()));           
+            ps.setString(5, "User");            
             ps.executeUpdate();
         }
     }
@@ -71,14 +67,14 @@ public class UtenteDAO {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    UtenteBean u = new UtenteBean();
-                    u.setIdutente(rs.getInt("idUtente"));
-                    u.setNome(rs.getString("nome"));
-                    u.setCognome(rs.getString("cognome"));
-                    u.setEmail(rs.getString("email"));
-                    u.setRuolo(rs.getString("ruolo"));
+                    UtenteBean utente = new UtenteBean();
+                    utente.setIdutente(rs.getInt("idUtente"));
+                    utente.setNome(rs.getString("nome"));
+                    utente.setCognome(rs.getString("cognome"));
+                    utente.setEmail(rs.getString("email"));
+                    utente.setRuolo(rs.getString("ruolo"));
                     
-                    return u; 
+                    return utente; 
                 }
             }
         }

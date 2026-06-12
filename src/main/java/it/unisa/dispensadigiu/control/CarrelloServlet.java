@@ -24,7 +24,7 @@ public class CarrelloServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1. Recuperiamo la Sessione e il Carrello
+        // Recuperiamo la Sessione e il Carrello
         HttpSession session = request.getSession();
         Carrello carrello = (Carrello) session.getAttribute("carrello");
         
@@ -34,7 +34,7 @@ public class CarrelloServlet extends HttpServlet {
             session.setAttribute("carrello", carrello);
         }
 
-        // 2. Capire quale azione vuole compiere l'utente
+        // Per capire l'azione dell'utente
         String action = request.getParameter("action");
         if (action == null) action = "view"; // Azione di default: mostra il carrello
 
@@ -42,13 +42,11 @@ public class CarrelloServlet extends HttpServlet {
             switch (action) {
                 case "add":
                     int idAdd = Integer.parseInt(request.getParameter("idProdotto"));
-                    ProdottoBean prodotto = prodottoDAO.trovaById(idAdd); // Serve aver creato questo metodo nel DAO!
+                    ProdottoBean prodotto = prodottoDAO.trovaById(idAdd); 
                     if (prodotto != null) {
                         carrello.aggiungiProdotto(prodotto, 1);
-                        // Creiamo un messaggio visivo temporaneo
                         session.setAttribute("toastMsg", "Hai aggiunto " + prodotto.getNome() + " al carrello!");
                     }
-                    // Torniamo da dove è venuto (es. Catalogo)
                     String referer = request.getHeader("referer");
                     response.sendRedirect(referer != null ? referer : request.getContextPath() + "/Catalogo");
                     break;
@@ -69,7 +67,6 @@ public class CarrelloServlet extends HttpServlet {
 
                 case "view":
                 default:
-                    // Mostriamo la pagina del carrello
                     request.getRequestDispatcher("/carrello.jsp").forward(request, response);
                     break;
             }

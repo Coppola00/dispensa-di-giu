@@ -42,7 +42,7 @@
                 // Controlliamo se esiste un utente in sessione
                 Object utenteLoggato = session.getAttribute("utente");
                 
-                // Se è loggato va all'Area Utente (Servlet), altrimenti va alla Login (JSP)
+                // Se è loggato va all'Area Utente, altrimenti va alla Login
                 String linkDestinazione = (utenteLoggato != null) 
                                           ? request.getContextPath() + "/AreaUtente" 
                                           : request.getContextPath() + "/login.jsp";

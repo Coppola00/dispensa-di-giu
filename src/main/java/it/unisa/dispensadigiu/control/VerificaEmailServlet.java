@@ -23,22 +23,17 @@ public class VerificaEmailServlet extends HttpServlet {
         
 		boolean esiste = false;
 
-        // 2. Interazione con il Model (DAO) per il controllo sul Database
         if (email != null && !email.trim().isEmpty()) {
             UtenteDAO utenteDAO = new UtenteDAO();
             try {
-                // Invochiamo il metodo del DAO che esegue la query SQL
                 esiste = utenteDAO.emailEsistente(email);
             } catch (SQLException e) {
-                // Il server non deve perdere il controllo. Gestiamo l'eccezione loggandola
-                // e restituendo un codice di errore HTTP 500 che la Fetch API può intercettare.
                 e.printStackTrace();
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 return;
             }
         }
         
-        // Imposto la risposta in formato JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
@@ -48,7 +43,6 @@ public class VerificaEmailServlet extends HttpServlet {
     }
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Reindirizziamo le chiamate POST al metodo GET per riutilizzare la logica
         doGet(request, response);
     }
 }

@@ -14,9 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import it.unisa.dispensadigiu.model.UtenteBean;
 
-/**
- * Filtro per bloccare i clienti normali dalle pagine di gestione commerciale.
- */
+
 @WebFilter(urlPatterns = {
     "/AdminProdotto", 
     "/admin.jsp"
@@ -29,9 +27,9 @@ public class FiltroAdmin implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         
-        httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-        httpResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0
-        httpResponse.setDateHeader("Expires", 0); // Proxies
+        httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        httpResponse.setHeader("Pragma", "no-cache");
+        httpResponse.setDateHeader("Expires", 0); 
         
         HttpSession session = httpRequest.getSession(false);
         UtenteBean utente = null;
@@ -40,15 +38,13 @@ public class FiltroAdmin implements Filter {
             utente = (UtenteBean) session.getAttribute("utente");
         }
 
-        // CONTROLLO: Se non è loggato OPPURE è loggato ma non è un admin
         if (utente == null || !"Admin".equals(utente.getRuolo())) {
-            // Lo rispediamo alla login dicendo che non ha i permessi
             httpRequest.getSession().setAttribute("toastMsg", "Area riservata al personale della dispensa. Accesso negato.");
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
             return; 
         }
 
-        // Se è admin, procedi pure
+        
         chain.doFilter(request, response);
     }
 

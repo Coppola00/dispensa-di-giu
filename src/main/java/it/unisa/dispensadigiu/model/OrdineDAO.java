@@ -10,10 +10,20 @@ import java.util.List;
 
 public class OrdineDAO {
 
-    /**
-     * Salva l'ordine e i rispettivi dettagli nel database utilizzando una transazione.
-     * Sfrutta il ritorno delle chiavi generate per associare le righe di composizione.
-     */
+	
+	 // Utility per mappare Ordine
+    private OrdineBean mapRowToOrdine(ResultSet rs) throws SQLException {
+        OrdineBean o = new OrdineBean();
+        o.setIdOrdine(rs.getInt("idordine"));
+        o.setIdUtente(rs.getInt("idutente"));
+        o.setDataOrdine(rs.getTimestamp("data_ordine"));
+        o.setTotaleOrdine(rs.getDouble("totale_ordine"));
+        o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
+        o.setStatoOrdine(rs.getString("stato_ordine"));
+        return o;
+    }
+    
+    
     public int doSave(OrdineBean ordine, Carrello carrello) throws SQLException {
         String queryOrdine = "INSERT INTO ordine (idutente, data_ordine, totale_ordine, costo_spedizione, stato_ordine) VALUES (?, ?, ?, ?, ?)";
         String queryDettaglio = "INSERT INTO composizioneOrdine (idordine, idprodotto, quantita, prezzo_unitario, iva) VALUES (?, ?, ?, ?, ?)";
@@ -22,11 +32,11 @@ public class OrdineDAO {
         
         try {
             con = ConnectionDatabase.getConnection();
-            con.setAutoCommit(false); // Disattiva l'autocommit per gestire la transazione atomica
+            con.setAutoCommit(false); 
 
             int idOrdineGenerato = -1;
 
-            // Inserimento della testata dell'ordine
+           
             try (PreparedStatement psOrdine = con.prepareStatement(queryOrdine, Statement.RETURN_GENERATED_KEYS)) {
                 psOrdine.setInt(1, ordine.getIdUtente());
                 psOrdine.setTimestamp(2, ordine.getDataOrdine());
@@ -46,14 +56,12 @@ public class OrdineDAO {
                 }
             }
 
-            //  Inserimento delle singole righe di dettaglio (composizioneOrdine)
+       
             try (PreparedStatement psDettaglio = con.prepareStatement(queryDettaglio)) {
                 for (ElementoCarrelloBean item : carrello.getElementi()) {
                     psDettaglio.setInt(1, idOrdineGenerato);
                     psDettaglio.setInt(2, item.getProdotto().getIdProdotto());
                     psDettaglio.setInt(3, item.getQuantita());
-                    
-                    // Congelamento dei prezzi e IVA storici al momento dell'acquisto
                     psDettaglio.setDouble(4, item.getProdotto().getPrezzoUnitario());
                     psDettaglio.setDouble(5, item.getProdotto().getIva());
                     
@@ -61,18 +69,18 @@ public class OrdineDAO {
                 }
             }
 
-            con.commit(); // Conferma tutte le operazioni della transazione
+            con.commit(); 
             return idOrdineGenerato;
 
         } catch (SQLException e) {
             if (con != null) {
-                con.rollback(); // Annulla tutto in caso di fallimento parziale o totale
+                con.rollback(); 
             }
             throw e;
         } finally {
             if (con != null) {
-                con.setAutoCommit(true); // Ripristina lo stato predefinito prima di restituire la connessione al pool
-                con.close(); // Restituisce la connessione al DataSource di Tomcat
+                con.setAutoCommit(true);
+                con.close();
             }
         }
     }
@@ -125,7 +133,7 @@ public class OrdineDAO {
                         p.setImmagineUrl(rs.getString("immagine_url"));
                     }
                     
-                    // I valori economici storici vengono estratti sempre dalla riga d'ordine
+                    // I valori economici storici vengono estratti dalla riga d'ordine
                     p.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
                     p.setIva(rs.getDouble("iva"));
 
@@ -152,7 +160,6 @@ public class OrdineDAO {
         return ordini;
     }
     
-    
     public List<OrdineBean> storicoOrdiniUtente(int idUtente) throws SQLException {
         List<OrdineBean> ordini = new ArrayList<>();
         String query = "SELECT * FROM ordine WHERE idutente = ? ORDER BY data_ordine DESC";
@@ -170,17 +177,14 @@ public class OrdineDAO {
         }
         return ordini;
     }
-
-   
+    
     public List<OrdineBean> doRetrieveByDate(String dataInizio, String dataFine) throws SQLException {
         List<OrdineBean> ordini = new ArrayList<>();
-        // Usiamo il filtro BETWEEN. Ordiniamo dal più recente al più vecchio
         String query = "SELECT * FROM ordine WHERE data_ordine BETWEEN ? AND ? ORDER BY data_ordine DESC";
 
         try (Connection con = ConnectionDatabase.getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
             
-            // I parametri passati dal form HTML5 (yyyy-MM-dd) si adattano perfettamente al setString o setDate di SQL
             ps.setString(1, dataInizio + " 00:00:00");
             ps.setString(2, dataFine + " 23:59:59");
 
@@ -191,20 +195,6 @@ public class OrdineDAO {
             }
         }
         return ordini;
-    }
-
-    /**
-     * Helper di mappatura per convertire una riga del ResultSet in un oggetto OrdineBean.
-     */
-    private OrdineBean mapRowToOrdine(ResultSet rs) throws SQLException {
-        OrdineBean o = new OrdineBean();
-        o.setIdOrdine(rs.getInt("idordine"));
-        o.setIdUtente(rs.getInt("idutente"));
-        o.setDataOrdine(rs.getTimestamp("data_ordine"));
-        o.setTotaleOrdine(rs.getDouble("totale_ordine"));
-        o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
-        o.setStatoOrdine(rs.getString("stato_ordine"));
-        return o;
     }
 }
 

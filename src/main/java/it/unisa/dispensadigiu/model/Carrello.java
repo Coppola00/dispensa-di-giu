@@ -14,14 +14,13 @@ public class Carrello implements Serializable {
     }
 
     public void aggiungiProdotto(ProdottoBean prodotto, int quantita) {
-        // Controllo se il prodotto è già nel carrello
+        // Controllo prima se il prodotto è già nel carrello
         for (ElementoCarrelloBean elemento : elementi) {
             if (elemento.getProdotto().getIdProdotto() == prodotto.getIdProdotto()) {
                 elemento.setQuantita(elemento.getQuantita() + quantita);
                 return;
             }
         }
-        // Se non c'è, lo aggiungo come nuovo elemento
         elementi.add(new ElementoCarrelloBean(prodotto, quantita));
     }
 

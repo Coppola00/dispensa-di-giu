@@ -23,7 +23,7 @@ public class RicercaAjaxServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter("q");
         
-        // Impostiamo il tipo di risposta come JSON, fondamentale per la Fetch API
+        // Impostiamo il tipo di risposta come JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
@@ -31,7 +31,6 @@ public class RicercaAjaxServlet extends HttpServlet {
             try {
                 List<ProdottoBean> prodotti = prodottoDAO.doRetrieveByNomeAjax(query);
                 
-                // Costruzione manuale del JSON (es. [{"id":1, "nome":"Provola"}, ...])
                 StringBuilder json = new StringBuilder("[");
                 for (int i = 0; i < prodotti.size(); i++) {
                     ProdottoBean p = prodotti.get(i);
@@ -52,7 +51,7 @@ public class RicercaAjaxServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         } else {
-            response.getWriter().write("[]"); // JSON vuoto se la query è troppo corta
+            response.getWriter().write("[]"); 
         }
     }
 }

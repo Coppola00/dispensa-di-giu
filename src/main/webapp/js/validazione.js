@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const regexPassword = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 
-    let emailValidaDb = false; // Flag per la validazione asincrona
+    let emailValidaDb = false; 
 
-    // Evidenzia il campo attivo (Focus)
+    // Evidenzia il campo attivo 
     inputs.forEach(input => {
         input.addEventListener("focus", function() {
             this.style.borderColor = "var(--giallo-sole)";
@@ -23,13 +23,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Controllo Email in tempo reale con AJAX (Fetch API)
+    // Controllo Email in tempo reale con AJAX 
     emailInput.addEventListener("blur", function() {
         const email = this.value;
         const erroreEmail = document.getElementById("errore-email");
 
         if (regexEmail.test(email)) {
-            // Se la regex passa, chiedo al server se esiste già
             fetch('/dispensa-di-giu/VerificaEmailServlet?email=' + encodeURIComponent(email))
                 .then(response => response.json())
                 .then(data => {
@@ -45,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Validazione finale al Submit
+    // Validazione al Submit
     form.addEventListener("submit", function(event) {
         let isValid = true;
 
@@ -79,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
             nascondiErrore(passwordInput, errorePassword);
         }
 
-        // Validazione Email (Regex + Flag DB)
+        // Validazione Email Regex + esistenza DB
         if (!regexEmail.test(emailInput.value) || !emailValidaDb) {
             mostraErrore(emailInput, document.getElementById("errore-email"), "Email non valida o già in uso.");
             isValid = false;
@@ -91,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Funzioni di supporto per mostrare/nascondere errori inline (NO ALERT)
+    // Funzioni di supporto per mostrare/nascondere errori inline 
     function mostraErrore(input, spanErrore, messaggio) {
         input.style.borderColor = "var(--rosso-pomodoro)";
         spanErrore.textContent = messaggio;

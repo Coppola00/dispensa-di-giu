@@ -32,7 +32,7 @@ import it.unisa.dispensadigiu.model.OrdineDAO;
 public class AdminServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProdottoDAO prodottoDAO = new ProdottoDAO();
-    private OrdineDAO ordineDAO = new OrdineDAO(); // Istanza del DAO Ordini
+    private OrdineDAO ordineDAO = new OrdineDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Forza anti-cache per evitare problemi con il tasto indietro del browser
@@ -43,7 +43,7 @@ public class AdminServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            // OPERAZIONE: ELIMINA PRODOTTO
+            // OPERAZIONE ELIMINA PRODOTTO
             if ("elimina".equals(action)) {
                 int idProdotto = Integer.parseInt(request.getParameter("idProdotto"));
                 prodottoDAO.doDelete(idProdotto); 
@@ -52,22 +52,20 @@ public class AdminServlet extends HttpServlet {
                 return;
             }
 
-            // 1. CARICAMENTO PRODOTTI
+            // CARICAMENTO PRODOTTI
             List<ProdottoBean> prodotti = prodottoDAO.trovaTutti();
             request.setAttribute("listaProdottiAdmin", prodotti);
             
-            // 2. CARICAMENTO E FILTRO ORDINI
+            // CARICAMENTO E FILTRO ORDINI
             String dataInizio = request.getParameter("dataInizio");
             String dataFine = request.getParameter("dataFine");
             List<OrdineBean> ordini;
 
             if (dataInizio != null && !dataInizio.trim().isEmpty() && dataFine != null && !dataFine.trim().isEmpty()) {
-                // Se sono presenti le date, effettua il filtraggio nel DB
                 ordini = ordineDAO.doRetrieveByDate(dataInizio, dataFine);
                 request.setAttribute("dataInizioSelezionata", dataInizio);
                 request.setAttribute("dataFineSelezionata", dataFine);
             } else {
-                // Altrimenti recupera lo storico completo
                 ordini = ordineDAO.doRetrieveAll();
             }
             request.setAttribute("listaOrdiniAdmin", ordini);

@@ -761,6 +761,34 @@ input:focus {
   cursor: pointer;
 }
 
+/* --- SEZIONE FILTRO ORDINI (Admin) --- */
+
+/* Contenitore principale del form di filtro */
+.box-filtro-ordini {
+    margin-top: 3rem;
+    border-top: 4px solid var(--verde-oliva);
+}
+
+/* Allineamento dei bottoni accanto agli input della data */
+.azioni-filtro {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+/* Stili specifici per il bottone di applicazione del filtro */
+.btn-applica {
+    margin-bottom: 0;
+    padding: 0.75rem 1.5rem;
+}
+
+/* Stili specifici per il bottone per resettare/annullare il filtro */
+.btn-annulla {
+    padding: 0.65rem 1rem;
+    text-align: center;
+    line-height: 1.2;
+}
+
 /* Badge grafici per monitorare lo stato degli ordini */
 .badge-stato {
   display: inline-block;

@@ -23,7 +23,7 @@ public class AreaUtenteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         
-        // 1. PROTEZIONE: L'utente è loggato? (Usiamo il nome della tua sessione)
+        // Controllo se l'utente è loggato
         UtenteBean utente = (UtenteBean) session.getAttribute("utente");
         if (utente == null) {
             session.setAttribute("toastMsg", "Accedi per visualizzare la tua area riservata.");
@@ -32,10 +32,8 @@ public class AreaUtenteServlet extends HttpServlet {
         }
 
         try {
-            // 2. RECUPERO STORICO ORDINI
             List<OrdineBean> storicoOrdini = ordineDAO.storicoOrdiniUtente(utente.getIdutente());
             
-            // 3. INVIO DATI ALLA JSP
             request.setAttribute("storicoOrdini", storicoOrdini);
             request.getRequestDispatcher("/area-utente.jsp").forward(request, response);
 

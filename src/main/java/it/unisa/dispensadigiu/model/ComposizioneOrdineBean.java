@@ -8,7 +8,7 @@ public class ComposizioneOrdineBean implements Serializable {
 
     private int idRigaOrdine;
     private int idOrdine;
-    private Integer idProdotto; // Uso di Integer per consentire il valore null
+    private Integer idProdotto;
     private int quantita;
     private double prezzoUnitario;
     private double iva;

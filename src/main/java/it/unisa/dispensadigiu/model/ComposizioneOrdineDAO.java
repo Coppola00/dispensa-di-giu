@@ -41,7 +41,6 @@ public class ComposizioneOrdineDAO {
         }
     }
 
-    // Recupera tutti gli elementi appartenenti a un determinato ordine
     public Collection<ComposizioneOrdineBean> doRetrieveByOrdine(int idOrdine) throws SQLException {
         String sql = "SELECT * FROM composizioneOrdine WHERE idordine = ?";
         Collection<ComposizioneOrdineBean> righe = new ArrayList<>();
@@ -57,7 +56,7 @@ public class ComposizioneOrdineDAO {
                     riga.setIdRigaOrdine(rs.getInt("id_riga_ordine"));
                     riga.setIdOrdine(rs.getInt("idordine"));
                     
-                    // Lettura corretta del valore NULL dal database
+                    // Lettura dell'eventuale valore NULL dal database
                     int idProdotto = rs.getInt("idprodotto");
                     if (rs.wasNull()) {
                         riga.setIdProdotto(null);

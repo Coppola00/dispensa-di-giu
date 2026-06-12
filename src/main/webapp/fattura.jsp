@@ -8,8 +8,6 @@
 <%
     UtenteBean intestatario = (UtenteBean) request.getAttribute("utenteFattura");
     OrdineBean ordine = (OrdineBean) request.getAttribute("ordineFattura");
-    
-    // Formattatore per la data
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 %>
 

@@ -17,13 +17,12 @@ public class RegistrazioneServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        // 1. Recupero dei parametri dalla form JSP
         String nome = request.getParameter("nome");
         String cognome = request.getParameter("cognome"); 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
-        // Controllo lato server di base 
+        // Controllo lato server 
         if (nome == null || email == null || password == null || nome.isEmpty() || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("errorMsg", "Compila tutti i campi obbligatori.");
             RequestDispatcher dispatcher = request.getRequestDispatcher("registrazione.jsp");
@@ -33,27 +32,22 @@ public class RegistrazioneServlet extends HttpServlet {
 
         try {
             
-            // 3. Creazione del Java Bean (Model)
             UtenteBean nuovoUtente = new UtenteBean();
             nuovoUtente.setNome(nome);
             nuovoUtente.setCognome(cognome != null ? cognome : ""); 
             nuovoUtente.setEmail(email);
             nuovoUtente.setPassword(password);
-            nuovoUtente.setRuolo("User"); 
+            nuovoUtente.setRuolo("User"); // Ruolo di default
 
-            // 4. Salvataggio nel Database tramite DAO
             UtenteDAO utenteDAO = new UtenteDAO();
             utenteDAO.registrazione(nuovoUtente);
 
-            // 5. Impostazione del messaggio di conferma 
             request.setAttribute("successMsg", "Registrazione completata con successo! Ora puoi effettuare il login.");
 
-            // 6. Forward alla View 
             RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
-            // Gestione generica per catturare sia eventuali eccezioni della PasswordUtility che SQLException del DAO
             e.printStackTrace();
             request.setAttribute("errorMsg", "Errore durante la registrazione. Riprova più tardi.");
             RequestDispatcher dispatcher = request.getRequestDispatcher("registrazione.jsp");
@@ -62,7 +56,6 @@ public class RegistrazioneServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Se qualcuno prova ad accedere tramite GET, lo rimandiamo al form
         response.sendRedirect("registrazione.jsp");
     }
 }

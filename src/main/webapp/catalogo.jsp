@@ -12,7 +12,7 @@
         <a href="${pageContext.request.contextPath}/Catalogo?categoria=Salumi" class="btn-filtro">Salumi</a>
         <a href="${pageContext.request.contextPath}/Catalogo?categoria=Formaggi" class="btn-filtro">Formaggi</a>
         <a href="${pageContext.request.contextPath}/Catalogo?categoria=Pasta" class="btn-filtro">Pasta</a>
-        <a href="${pageContext.request.contextPath}/Catalogo?categoria=Olio e Sottoli" class="btn-filtro">Olio e Sottoli</a>
+        <a href="${pageContext.request.contextPath}/Catalogo?categoria=Vini" class="btn-filtro">Vini</a>
     </div>
     
     <div class="griglia-prodotti">

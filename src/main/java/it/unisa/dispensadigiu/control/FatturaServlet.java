@@ -41,7 +41,7 @@ public class FatturaServlet extends HttpServlet {
         try {
             int idOrdine = Integer.parseInt(idParam);
             
-            // 1. Recuperiamo l'ordine generale
+            // Recuperiamo l'ordine generale
             OrdineBean ordine = ordineDAO.doRetrieveById(idOrdine);
             
             if (ordine != null) {

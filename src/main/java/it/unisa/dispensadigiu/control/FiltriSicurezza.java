@@ -14,10 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import it.unisa.dispensadigiu.model.UtenteBean;
 
-/**
- * Filtro centralizzato per il controllo degli accessi.
- * Protegge sia le Servlet che i file JSP sensibili.
- */
+
 @WebFilter(urlPatterns = {
     "/AreaUtente", 
     "/Checkout", 
@@ -36,14 +33,12 @@ public class FiltriSicurezza implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         
-        httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-        httpResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0
-        httpResponse.setDateHeader("Expires", 0); // Proxies
+        httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        httpResponse.setHeader("Pragma", "no-cache"); 
+        httpResponse.setDateHeader("Expires", 0); 
         
-        // Recuperiamo l'URI richiesto per sapere esattamente dove vuole andare l'utente
         String requestURI = httpRequest.getRequestURI();
-        
-        // Recuperiamo la sessione (senza creane una nuova se non esiste)
+
         HttpSession session = httpRequest.getSession(false);
         
         UtenteBean utente = null;
@@ -51,17 +46,17 @@ public class FiltriSicurezza implements Filter {
             utente = (UtenteBean) session.getAttribute("utente");
         }
 
-        // 1. VERIFICA: Se l'utente non è loggato, blocchiamo la richiesta
+        // Se l'utente non è loggato, blocchiamo la richiesta
         if (utente == null) {
             httpRequest.getSession().setAttribute("toastMsg", "Accesso negato. Effettua il login per visualizzare questa pagina.");
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
             return; 
         }
         
-        // 2. VERIFICA: Logica di smistamento per l'Amministratore
+        // Logica di smistamento per l'Amministratore
         else if (utente.getRuolo() != null && utente.getRuolo().equalsIgnoreCase("admin")) {
             
-            // L'eccezione: Se l'admin vuole vedere una fattura, lo facciamo passare
+            // Se l'admin vuole vedere una fattura, lo facciamo passare
             if (requestURI.contains("/Fattura") || requestURI.contains("/fattura.jsp")) {
                 chain.doFilter(request, response);
                 return;
@@ -72,7 +67,7 @@ public class FiltriSicurezza implements Filter {
             }
         } 
         
-        // 3. VERIFICA: Se è un utente normale, lo lasciamo passare
+        // Se è un utente normale, lo lasciamo passare
         else {    
             chain.doFilter(request, response);
         }

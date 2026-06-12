@@ -39,24 +39,19 @@ public class CatalogoServlet extends HttpServlet {
             String categoria = request.getParameter("categoria");
             List<ProdottoBean> prodotti;
 
-            // Se l'utente ha cliccato su una categoria specifica, filtriamo
             if (categoria != null && !categoria.trim().isEmpty()) {
                 prodotti = prodottoDAO.trovaByCategory(categoria);
             } else {
-                // Altrimenti mostriamo tutto il catalogo
                 prodotti = prodottoDAO.trovaTutti();
             }
-
             
             request.setAttribute("listaProdotti", prodotti);
-
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("/catalogo.jsp");
             dispatcher.forward(request, response);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // In caso di errore DB, rimandiamo alla pagina di errore 500
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore di comunicazione con il database");
         } 
     }
